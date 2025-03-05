@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Http\Requests\Admin;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class ProposalRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'title' => ['required', 'string', 'max:250'],
+            'comment' => ['required', 'string'],
+            'feedback' => ['nullable', 'string', 'max:250'],
+            'status' => ['nullable', 'boolean'],
+            'proposal_id' => ['nullable', 'integer'],
+            'reviewer_id' => ['nullable', 'integer'],
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'Judul Catatan harus diisi',
+            'title.max' => 'Maximal 250 karakter',
+            'comment.required' => 'Komentar harus diisi',
+            'comment.max' => 'Maximal 250 Karakter',
+        ];
+    }
+}

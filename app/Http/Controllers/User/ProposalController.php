@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProposalReview;
 use Illuminate\Http\Request;
 use App\Models\Proposal;
 use App\Models\Member;
@@ -11,14 +12,19 @@ use App\Enums\RoleEnum;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use App\Http\Requests\User\ProposalRequest;
-
+use App\Http\Requests\User\ProposalReviewRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Models\Setting;
 class ProposalController extends Controller
 {
+    use AuthorizesRequests;
     private $view;
     private $route;
     private $proposal;
     private $member;
     private $user;
+    private $proposalReview;
+    private $setting;
     public function __construct()
     {
         $this->view = "pages.user.proposal.";
@@ -26,16 +32,18 @@ class ProposalController extends Controller
         $this->proposal = new Proposal();
         $this->member = new Member();
         $this->user = new User();
+        $this->proposalReview = new ProposalReview();
+        $this->setting = new Setting();
     }
 
     public function index()
     {
         $member = $this->member::where('user_id', Auth::user()->id)->get();
-        $proposal = $this->proposal::whereIn('id', $member->pluck('proposal_id'))->get();
-        $advisor = $this->member::where('proposal_id', $proposal->pluck('id')->all())
+        $proposal = $this->proposal::with('user')->whereIn('id', $member->pluck('proposal_id'))->paginate(10);
+        $advisor = $this->member::whereIn('proposal_id', $proposal->pluck('id')->all())
             ->where('role_in_team', 'advisor')
             ->get()
-            ->keyBy('proposal_id');
+            ->groupBy('proposal_id');
 
         // Cari di model member dimana semua yang mempunyai proposal_id sama dengan $proposal->id dan value dari role_in_team = member
         $proposal_member = $this->member::whereIn('proposal_id', $proposal->pluck('id')->all())
@@ -43,10 +51,20 @@ class ProposalController extends Controller
             ->get()
             ->groupBy('proposal_id');
 
+        // Cari proposal review by proposal_id
+        $proposalReview = $this->proposalReview::whereIn('proposal_id', $proposal->pluck('id')->all())
+            ->where('status', false)
+            ->get()
+            ->groupBy('proposal_id');
+
+        $setting = $this->setting::first();
+
         return view($this->view . "index",[
             'proposal' => $proposal,
             'proposal_member' => $proposal_member,
             'advisor' => $advisor,
+            'proposalReview' => $proposalReview,
+            'setting' => $setting
         ]);
     }
 
@@ -54,22 +72,45 @@ class ProposalController extends Controller
         $proposal = null;
         if ($id) {
             $proposal = $this->proposal::findOrFail($id);
+            $this->authorize('update', $proposal);
         }
         $members = $this->user->role(RoleEnum::MAHASISWA)->get();
         $advisors = $this->user->role(RoleEnum::DOSEN)->get();
         $scheme = ['KI', 'KC', 'K', 'RE', 'RSH', 'PM', 'PI', 'VGK', 'GFT', 'AI'];
+
+        // Mengambil semua data review proposal berdasarkan id proposal
+        $proposalReview = $this->proposalReview::where('proposal_id', $id)->get();
 
         return view($this->view."edit",[
             'proposal' => $proposal,
             'members' => $members,
             'advisors' => $advisors,
             'scheme' => $scheme,
+            'proposalReview' => $proposalReview
         ]);
     }
 
     public function store(ProposalRequest $request)
     {
+        // Cek apakah ini proses create atau update
+        $isCreate = !$request->has('id');
+
+        // Jika ini proses create, cek apakah proposal submission dibuka
+        if ($isCreate) {
+            $setting = Setting::first(); // Ambil setting (asumsi setting disimpan di tabel settings)
+            if (!$setting || !$setting->is_proposal_submission_open) {
+                alert()->html('Gagal', 'Proses pengajuan proposal ditutup. Silakan hubungi PKM CENTER.', 'error');
+                return redirect()->back()->withInput();
+            }
+        }
+
         $validatedData = $request->validated();
+
+        // Jika ini proses create, ambil tahun pengajuan dari setting
+        if ($isCreate) {
+            $setting = Setting::first();
+            $validatedData['year'] = $setting->proposal_submission_year;
+        }
 
         // Jika ini proses edit, ambil proposal yang sudah ada
         $proposal = $request->has('id') ? $this->proposal::findOrFail($request->id) : null;
@@ -85,17 +126,12 @@ class ProposalController extends Controller
             $validatedData['file'] = $proposal->file;
         }
 
-        // Tambahkan data dasar proposal
-        $validatedData['status'] = 'new';
         $validatedData['faculty_id'] = User::findOrFail($request->leader_id)->faculty_id;
 
         // Simpan atau update proposal
         $proposal = $this->proposal::updateOrCreate(['id' => $request->id], $validatedData);
-
-        // Hapus anggota lama sebelum menyimpan yang baru
         $proposal->proposalMembers()->delete();
 
-        // Simpan advisor, leader, dan anggota tim
         $roles = [
             'advisor' => $request->advisors,
             'leader' => $request->leader_id,
@@ -117,5 +153,47 @@ class ProposalController extends Controller
 
         alert()->html('Berhasil', 'Data berhasil diperbarui', 'success');
         return redirect()->route($this->route . 'index')->with('success', 'Proposal berhasil disimpan!');
+    }
+
+    public function single_destroy($id)
+    {
+        $proposal = $this->proposal::findOrFail($id);
+        $proposal->proposalMembers()->delete();
+        $proposal->delete();
+
+        alert()->html('Berhasil', 'Data berhasil dihapus', 'success');
+        return redirect()->route($this->route . 'index')->with('success', 'Proposal berhasil dihapus!');
+    }
+
+    public function review(string $proposal_id, string $id = null)
+    {
+        $proposalReview = null;
+        $proposal = $this->proposal::findOrFail($proposal_id);
+        if ($id) {
+            $proposalReview = $this->proposalReview::findOrFail($id);
+        }
+        return view($this->view . "review", [
+            'proposal_id' => $proposal_id,
+            'proposal' => $proposal,
+            'proposalReview' => $proposalReview
+        ]);
+    }
+
+    public function storeReview(string $proposal_id, ProposalReviewRequest $request)
+    {
+        $validatedData = $request->validated();
+        $validatedData['proposal_id'] = $proposal_id;
+        $validatedData['status'] = 1;
+
+        if ($request->has('id')) {
+            $proposalReview = $this->proposalReview::findOrFail($request->id);
+            $proposalReview->update($validatedData);
+            alert()->html('Berhasil', 'Data berhasil diperbarui', 'success');
+            return redirect()->route($this->route . 'edit', ['id' => $proposal_id]);
+        } else {
+            $proposalReview = $this->proposalReview::create($validatedData);
+            alert()->html('Berhasil', 'Data berhasil disimpan', 'success');
+            return redirect()->route($this->route . 'edit', ['id' => $proposal_id]);
+        }
     }
 }

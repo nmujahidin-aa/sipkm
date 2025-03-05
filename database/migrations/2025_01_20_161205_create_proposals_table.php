@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('proposals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('leader_id')->constrained('users')->onDelete('cascade');
-            $table->string('title');
-            $table->string( 'file');
-            $table->string( 'team_name');
-            $table->enum('status', ['new', 'revision', 'accepted', 'rejected'])->default('new');
+            $table->string('title')->nullable();
+            $table->string( 'file')->nullable();
+            $table->string( 'team_name')->nullable();
+            $table->string( 'year')->nullable();
+            $table->enum('status', ['reviewed', 'accepted', 'rejected'])->default('reviewed');
             $table->foreignId('faculty_id')->constrained('faculties')->onDelete('cascade');
             $table->enum('scheme', ['K', 'KC', 'KI', 'VGK', 'GFT', 'RE', 'RSH', 'PM', 'PI', 'AI']);
             $table->timestamps();

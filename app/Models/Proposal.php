@@ -13,6 +13,7 @@ class Proposal extends Model
         'faculty_id',
         'status',
         'file',
+        'year',
         'team_name',
         'scheme',
         'created_at',
@@ -46,5 +47,15 @@ class Proposal extends Model
     public function leader()
     {
         return $this->belongsTo(User::class, 'leader_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function proposalReview()
+    {
+        return $this->hasMany(ProposalReview::class);
     }
 }

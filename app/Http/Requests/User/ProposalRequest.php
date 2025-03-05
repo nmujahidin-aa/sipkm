@@ -24,6 +24,7 @@ class ProposalRequest extends FormRequest
         $rules = [
             'title' => ['required', 'string'],
             'leader_id' => ['required', 'exists:users,id'],
+            'team_name' => ['required', 'string'],
             'advisors' => ['required', 'string'],
             'members' => ['required', 'array'],
             'members.*' => ['exists:users,id'],
@@ -49,13 +50,14 @@ class ProposalRequest extends FormRequest
         return [
             'title.required' => 'Judul wajib diisi',
             'scheme.required' => 'Skema wajib diisi',
+            'leader_id.required' => 'Ketua wajib diisi',
+            'team_name.required' => 'Nama tim wajib diisi',
             'file.required' => 'File proposal wajib diisi',
             'file.mimes' => 'File proposal harus berformat pdf',
             'file.max' => 'File proposal maksimal 5MB',
             'members.required' => 'Anggota wajib diisi',
             'members.*.required' => 'Anggota wajib diisi',
             'advisors.required' => 'Pembimbing wajib diisi',
-            'team_name.required' => 'Nama tim wajib diisi',
         ];
     }
 }

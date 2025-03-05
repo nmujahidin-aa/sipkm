@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use App\Enums\RoleEnum;
 use App\Models\User;
 use Error;
+
 class LoginController extends Controller
 {
     private $view;
@@ -48,8 +49,7 @@ class LoginController extends Controller
                 // Pola untuk NIP (misalnya, 18 digit)
                 $fieldType = 'nip';
             } else {
-                // Default jika tidak ada pola yang cocok
-                $fieldType = 'unknown';
+                throw new \Exception("Nama pengguna tidak valid, gunakan NIM/NIDN/NUPK/NIP atau email @um.ac.id anda");
             }
             $rememberme = (empty($request->input('rememberme'))) ? false : true;
 
@@ -91,8 +91,10 @@ class LoginController extends Controller
 
                 alert()->html('Berhasil', 'Login berhasil', 'success');
                 return redirect()->intended(route('dashboard.index'));
-            }
 
+            } else {
+                throw new \Exception("Username atau password salah");
+            }
         } catch (\Throwable $e) {
             Log::emergency($e->getMessage());
 

@@ -19,5 +19,9 @@ class Member extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function proposal()
+    {
+        return $this->belongsTo(Proposal::class);
+    }
 
 }

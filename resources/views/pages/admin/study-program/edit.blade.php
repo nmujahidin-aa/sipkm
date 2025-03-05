@@ -4,17 +4,6 @@
     {{ isset($studyPrograms) ? 'Ubah Program Studi: ' . $studyPrograms->name : 'Tambah Program Studi' }}
 @endsection
 
-@section('style')
-<style>
-    .fixed-width-30 {
-        width: 20%;
-    }
-    .fixed-width-70 {
-        width: 80%;
-    }
-</style>
-@endsection
-
 @section('breadcumb')
 <div class="page-title d-flex flex-column me-5">
     <!--begin::Title-->
@@ -132,66 +121,40 @@
                                         </div>
                                         <!--end::Card title-->
                                     </div>
-                                    <!--end::Card header-->
-                                    <!--begin::Card body-->
-                                    <div class="card-body pt-0 pb-5">
-                                        <!--begin::Table wrapper-->
-                                        <div class="table-responsive">
-                                            <!--begin::Table-->
-                                            <table class="table align-middle gy-3" id="kt_table_users_login_session">
-                                                <!--begin::Table body-->
-                                                <tbody class="fs-6 fw-bold text-gray-600">
-                                                    @if (isset($studyPrograms))
-                                                        <input type="hidden" name="id" value="{{ $studyPrograms->id }}" autocomplete="off">
-                                                    @endif
-
-                                                    <tr>
-                                                        <td class="fixed-width-30">Fakultas <span class="text-danger">*</span></td>
-                                                        <td class="fixed-width-70">
-                                                            <select name="faculty_id" class="form-select @error('faculty_id') is-invalid @enderror" data-control="select2" data-placeholder="Select an option">
-                                                                <option></option>
-                                                                @foreach ($faculties as $faculty)
-                                                                    <option value="{{ $faculty->id }}" {{ old('faculty_id') == $faculty->id || (isset($studyPrograms) && $studyPrograms->faculty_id == $faculty->id) ? 'selected' : '' }}>
-                                                                        {{ $faculty->name }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                            <div class="invalid-feedback">
-                                                                @error('faculty_id')
-                                                                    {{ $message }}
-                                                                @enderror
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td class="fixed-width-30">Nama <span class="text-danger">*</span></td>
-                                                        <td class="fixed-width-70">
-                                                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') ? old('name') : (isset($studyPrograms) ? $studyPrograms->name : '') }}" placeholder="Contoh: S1 Pendidikan Teknik Informatika">
-                                                            <div class="invalid-feedback">
-                                                                @error('name')
-                                                                {{ $message }}
-                                                                @enderror
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="fixed-width-30">Singakatan Nama <span class="text-danger">*</span></td>
-                                                        <td class="fixed-width-70">
-                                                            <input type="text" name="short_name" class="form-control @error('short_name') is-invalid @enderror" value="{{ old('short_name') ? old('short_name') : (isset($studyPrograms) ? $studyPrograms->short_name : '') }}" placeholder="Contoh: PTI">
-                                                            <div class="invalid-feedback">
-                                                                @error('short_name')
-                                                                {{ $message }}
-                                                                @enderror
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                                <!--end::Table body-->
-                                            </table>
-                                            <!--end::Table-->
+                                    @if (isset($studyPrograms))
+                                        <input type="hidden" name="id" value="{{ $studyPrograms->id }}" autocomplete="off">
+                                    @endif
+                                    <div class="card-body pt-5 pb-5">
+                                        <div class="row mb-4 align-items-center">
+                                            <label class="col-lg-3 col-form-label">Fakultas <span class="text-danger">*</span></label>
+                                            <div class="col-lg-9">
+                                                <select name="faculty_id" class="form-select @error('faculty_id') is-invalid @enderror" data-control="select2" data-placeholder="Select an option">
+                                                    <option></option>
+                                                    @foreach ($faculties as $faculty)
+                                                        <option value="{{ $faculty->id }}" {{ old('faculty_id') == $faculty->id || (isset($studyPrograms) && $studyPrograms->faculty_id == $faculty->id) ? 'selected' : '' }}>
+                                                            {{ $faculty->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="invalid-feedback">@error('faculty_id'){{ $message }}@enderror</div>
+                                            </div>
                                         </div>
-                                        <!--end::Table wrapper-->
+
+                                        <div class="row mb-4 align-items-center">
+                                            <label class="col-lg-3 col-form-label">Nama <span class="text-danger">*</span></label>
+                                            <div class="col-lg-9">
+                                                <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') ? old('name') : (isset($studyPrograms) ? $studyPrograms->name : '') }}">
+                                                <div class="invalid-feedback">@error('name'){{ $message }}@enderror</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-4 align-items-center">
+                                            <label class="col-lg-3 col-form-label">Singkatan Nama <span class="text-danger">*</span></label>
+                                            <div class="col-lg-9">
+                                                <input type="text" name="short_name" class="form-control @error('short_name') is-invalid @enderror" value="{{ old('short_name') ? old('short_name') : (isset($studyPrograms) ? $studyPrograms->short_name : '') }}">
+                                                <div class="invalid-feedback">@error('short_name'){{ $message }}@enderror</div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <!--end::Card body-->
                                     <div class="card-footer text-end">

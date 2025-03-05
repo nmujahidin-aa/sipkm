@@ -31,7 +31,7 @@ License: For each use you must have a valid license purchased only from above li
 						<div class="header-brand">
 							<!--begin::Logo-->
 							<a href="{{ route('dashboard.index') }}">
-                                <h1 class="text-light">SIPKM UM</h1>
+                                <h1 class="text-light">PKM CENTER UM</h1>
 								{{-- <img alt="Logo" src="{{URL::to('/')}}/assets/media/logos/logo-1.svg" class="h-50px h-lg-50px" /> --}}
 							</a>
 							<!--end::Logo-->

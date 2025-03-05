@@ -91,6 +91,7 @@
                         <thead>
                             <!--begin::Table row-->
                             <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
+                                <th class="">No.</th>
                                 <th class="min-w-125px">Program Studi</th>
                                 <th class="min-w-125px">Fakultas</th>
                                 <th class="text-end min-w-100px">Aksi</th>
@@ -106,6 +107,9 @@
                                 <!--begin::Checkbox-->
                                 <!--end::Checkbox-->
                                 <!--begin::User=-->
+                                <td>
+                                    {{$index + 1}}
+                                </td>
                                 <td class="d-flex align-items-center">
                                     <!--begin::User details-->
                                     <div class="d-flex flex-column" style="line-height: 1.2;">

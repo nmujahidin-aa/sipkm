@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('proposal_id')->constrained()->onDelete('cascade');
             $table->foreignId('reviewer_id')->constrained('users')->onDelete('cascade');
-            $table->enum('status', ['accepted', 'rejected', 'revision'])->default('revision');
+            $table->boolean('status')->default(false);
+            $table->string('title')->nullable();
+            $table->text('comment')->nullable();
             $table->text('feedback')->nullable();
             $table->timestamps();
         });

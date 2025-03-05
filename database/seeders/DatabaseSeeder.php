@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             StudyProgramSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
+            FakerUserSeeder::class,
+            ProposalSeeder::class,
         ]);
     }
 }

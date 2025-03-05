@@ -1,8 +1,9 @@
 @extends('layouts.auth')
+@section('title','Masuk | SIPKM-UM')
 @section('content')
 <div class="d-flex flex-column flex-root">
     <!--begin::Authentication - Sign-in -->
-    <div class="d-flex flex-column flex-column-fluid bgi-overlay">
+    <div class="d-flex flex-column flex-column-fluid">
         <!--begin::Content-->
         <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
             <!--begin::Logo-->
@@ -11,24 +12,24 @@
             </a>
             <!--end::Logo-->
             <!--begin::Wrapper-->
-            <div class="w-sm-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+            <div class="">
                 <!--begin::Form-->
                 <form class="form w-100" action="{{route('auth.login.post')}}" method="POST">
                     @csrf
                     <!--begin::Heading-->
                     <div class="text-center mb-10">
                         <!--begin::Title-->
-                        <h1 class="text-dark mb-3">Masuk ke SIPKM</h1>
+                        <h1 class="text-dark mb-3">Masuk ke SIPKM UM</h1>
                         <!--end::Title-->
                         <!--begin::Link-->
-                        <div class="text-gray-400 fw-bold fs-4">Sistem Informasi PKM UM</div>
+                        <div class="text-gray-500 fs-5">Belum punya akun SIPKM UM? <a href="{{route('auth.register.index')}}" class="text-primary">Daftar sekarang</a> </div>
                         <!--end::Link-->
                     </div>
                     <!--end::Heading-->
                     <!--begin::Input group-->
                     <div class="fv-row mb-10">
-                        <label class="form-label fs-6 fw-bolder text-dark">Email/NIM/NIDN/NUPTK</label>
-                        <input class="form-control form-control-lg form-control-solid @error('username') is-invalid @enderror" type="text" name="username" value="{{ old('username') }}" autocomplete="off" placeholder="Masukkan Email/NIM/NIDN/NUPTK anda"/>
+                        <label class="form-label fs-6 fw-bolder text-dark">Nama Pengguna</label>
+                        <input class="form-control form-control-lg form-control-solid @error('username') is-invalid @enderror" type="text" name="username" value="{{ old('username') }}" autocomplete="off" placeholder="NIM/NIDN/NUPTK/Email @um.ac.id anda"/>
                         @error('username')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -51,25 +52,19 @@
                                 <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                         </button>
                     </div>
-
-                    <span class="form-label fs-6">Belum punya akun? <a href="{{route('auth.register.index')}}" class="text-primary">Daftar</a> </span>
                 </form>
                 <!--end::Form-->
+            </div>
+            <div class="d-flex flex-center flex-column-auto pb-10">
+                <div class="d-flex align-items-center fw-bold fs-8">
+                    <a class="text-muted text-hover-primary px-2">&copy; 2025 - {{ date('Y') }} PKM CENTER UNIVERSITAS NEGERI MALANG</a>
+                </div>
             </div>
             <!--end::Wrapper-->
         </div>
         <!--end::Content-->
         <!--begin::Footer-->
-        <div class="d-flex flex-center flex-column-auto pb-10">
-            <div class="d-flex align-items-center fw-bold fs-8">
-                <a class="text-muted text-hover-primary px-2">&copy; 2025 - {{ date('Y') }} PKM CENTER UNIVERSITAS NEGERI MALANG</a>
-            </div>
-        </div>
         <!--end::Footer-->
-        <!--begin::Background Images-->
-        <img src="{{URL::to('/')}}/assets/media/illustrations/sketchy-1/2.png" class="background-image-left" alt="Background Left" />
-        <img src="{{URL::to('/')}}/assets/media/illustrations/sketchy-1/1.png" class="background-image-right" alt="Background Right" />
-        <!--end::Background Images-->
     </div>
     <!--end::Authentication - Sign-in-->
 </div>

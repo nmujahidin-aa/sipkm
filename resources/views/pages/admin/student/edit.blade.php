@@ -152,132 +152,97 @@
                                         </div>
                                         <!--end::Card title-->
                                     </div>
-                                    <!--end::Card header-->
-                                    <!--begin::Card body-->
-                                    <div class="card-body pt-0 pb-5">
-                                        <!--begin::Table wrapper-->
-                                        <div class="table-responsive">
-                                            <!--begin::Table-->
-                                            <table class="table align-middle gy-3" id="kt_table_users_login_session">
-                                                <!--begin::Table body-->
-                                                <tbody class="fs-6 fw-bold text-gray-600">
-                                                    @if (isset($students))
-                                                        <input type="hidden" name="id" value="{{ $students->id }}" autocomplete="off">
-                                                    @endif
-                                                    @if (!isset($students))
-                                                        <input type="hidden" name="password" value="{{ bcrypt('12345678') }}" autocomplete="off">
-                                                    @endif
-                                                    <tr>
-                                                        <td class="fixed-width-30">Nama Lengkap <span class="text-danger">*</span></td>
-                                                        <td class="fixed-width-70">
-                                                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') ? old('name') : (isset($students) ? $students->name : '') }}">
-                                                            <div class="invalid-feedback">
-                                                                @error('name')
-                                                                {{ $message }}
-                                                                @enderror
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="fixed-width-30">NIM <span class="text-danger">*</span></td>
-                                                        <td class="fixed-width-70">
-                                                            <input type="text" name="nim" class="form-control @error('nim') is-invalid @enderror" value="{{ old('nim') ? old('nim') : (isset($students) ? $students->nim : '') }}">
-                                                            <div class="invalid-feedback">
-                                                                @error('nim')
-                                                                {{ $message }}
-                                                                @enderror
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="fixed-width-30">Email <span class="text-danger">*</span></td>
-                                                        <td class="fixed-width-70">
-                                                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') ? old('email') : (isset($students) ? $students->email : '') }}">
-                                                            <div class="invalid-feedback">
-                                                                @error('email')
-                                                                {{ $message }}
-                                                                @enderror
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="fixed-width-30">Program Studi <span class="text-danger">*</span></td>
-                                                        <td class="fixed-width-70">
-                                                            <select name="study_program_id" class="form-select @error('study_program_id') is-invalid @enderror" data-control="select2" data-placeholder="Select an option">
-                                                                <option></option>
-                                                                @foreach ($studyPrograms as $program)
-                                                                    <option value="{{ $program->id }}" {{ old('study_program_id') == $program->id || (isset($students) && $students->study_program_id == $program->id) ? 'selected' : '' }}>
-                                                                        {{ $program->name }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                            <div class="invalid-feedback">
-                                                                @error('study_program_id')
-                                                                    {{ $message }}
-                                                                @enderror
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    @if (Auth::user()->current_role_id == 1)
-                                                    <tr>
-                                                        <td class="fixed-width-30">Role <span class="text-secondary">(opsional)</span></td>
-                                                        <td class="fixed-width-70">
-                                                            <select name="roles[]" class="form-select @error('roles') is-invalid @enderror" data-control="select2" data-placeholder="Select an option" multiple="multiple">
-                                                                <option></option>
-                                                                @foreach ($roles as $role)
-                                                                    <option value="{{ $role->id }}"
-                                                                        {{ in_array($role->name, old('roles', isset($students) ? $students->roles->pluck('name')->toArray() : [])) ? 'selected' : '' }}>
-                                                                        {{ $role->name }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                            <div class="invalid-feedback">
-                                                                @error('roles')
-                                                                    {{ $message }}
-                                                                @enderror
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    @endif
-                                                    <tr>
-                                                        <td class="fixed-width-30">Bank <span class="text-secondary">(opsional)</span></td>
-                                                        <td class="fixed-width-70">
-                                                            <div class="input-group">
-                                                                <div class="fixed-width-30">
-                                                                    <select name="bank_name" class="form-select @error('bank_name') is-invalid @enderror rounded-end-0" data-control="select2" data-placeholder="Pilih Bank">
-                                                                        <option value="">Pilih Bank</option>
-                                                                        @foreach ($banks as $bank)
-                                                                            <option value="{{ $bank }}" {{ old('bank_name') == $bank || (isset($students) && $students->bank_name == $bank) ? 'selected' : '' }}>{{ $bank }}</option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </div>
-                                                                <input type="text" name="bank_number" class="fixed-width-70 form-control @error('bank_number') is-invalid @enderror" placeholder="Masukkan nomor rekening" value="{{ old('bank_number') ? old('bank_number') : (isset($students) ? $students->bank_number : '') }}">
-                                                            </div>
-                                                            <div class="invalid-feedback">
-                                                                @error('bank_number')
-                                                                    {{ $message }}
-                                                                @enderror
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td class="fixed-width-30">No. Handphone <span class="text-secondary">(opsional)</span></td>
-                                                        <td class="fixed-width-70">
-                                                            <input type="number" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone') ? old('phone') : (isset($students) ? $students->phone : '') }}">
-                                                            <div class="invalid-feedback">
-                                                                @error('phone')
-                                                                {{ $message }}
-                                                                @enderror
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                                <!--end::Table body-->
-                                            </table>
-                                            <!--end::Table-->
+                                    @if (isset($students))
+                                        <input type="hidden" name="id" value="{{ $students->id }}" autocomplete="off">
+                                    @endif
+                                    @if (!isset($students))
+                                        <input type="hidden" name="password" value="{{ bcrypt('password') }}" autocomplete="off">
+                                    @endif
+                                    <div class="card-body pt-5 pb-5">
+                                        <div class="row mb-4 align-items-center">
+                                            <label class="col-lg-3 col-form-label">Nama Lengkap <span class="text-danger">*</span></label>
+                                            <div class="col-lg-9">
+                                                <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') ? old('name') : (isset($students) ? $students->name : '') }}">
+                                                <div class="invalid-feedback">@error('name'){{ $message }}@enderror</div>
+                                            </div>
                                         </div>
-                                        <!--end::Table wrapper-->
+
+                                        <div class="row mb-4 align-items-center">
+                                            <label class="col-lg-3 col-form-label">NIM <span class="text-danger">*</span></label>
+                                            <div class="col-lg-9">
+                                                <input type="text" name="nim" class="form-control @error('nim') is-invalid @enderror" value="{{ old('nim') ? old('nim') : (isset($students) ? $students->nim : '') }}">
+                                                <div class="invalid-feedback">@error('nim'){{ $message }}@enderror</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-4 align-items-center">
+                                            <label class="col-lg-3 col-form-label">Email <span class="text-danger">*</span></label>
+                                            <div class="col-lg-9">
+                                                <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') ? old('email') : (isset($students) ? $students->email : '') }}">
+                                                <div class="invalid-feedback">@error('email'){{ $message }}@enderror</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-4 align-items-center">
+                                            <label class="col-lg-3 col-form-label">Program Studi <span class="text-danger">*</span></label>
+                                            <div class="col-lg-9">
+                                                <select name="study_program_id" class="form-select @error('study_program_id') is-invalid @enderror" data-control="select2" data-placeholder="Select an option">
+                                                    <option></option>
+                                                    @foreach ($studyPrograms as $program)
+                                                        <option value="{{ $program->id }}" {{ old('study_program_id') == $program->id || (isset($students) && $students->study_program_id == $program->id) ? 'selected' : '' }}>
+                                                            {{ $program->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="invalid-feedback">@error('study_program_id'){{ $message }}@enderror</div>
+                                            </div>
+                                        </div>
+
+                                        @if(Auth::user()->current_role_id == 1)
+                                        <div class="row mb-4 align-items-center">
+                                            <label class="col-lg-3 col-form-label">Role <span class="text-danger">*</span></label>
+                                            <div class="col-lg-9">
+                                                <select name="roles[]" class="form-select @error('roles') is-invalid @enderror" data-control="select2" data-placeholder="Select an option" multiple="multiple">
+                                                    <option></option>
+                                                    @foreach ($roles as $role)
+                                                        <option value="{{ $role->name }}"
+                                                            {{ in_array($role->name, old('roles', isset($students) ? $students->roles->pluck('name')->toArray() : [])) ? 'selected' : '' }}>
+                                                            {{ $role->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="invalid-feedback">@error('roles'){{ $message }}@enderror</div>
+                                            </div>
+                                        </div>
+                                        @endif
+
+                                        <div class="row mb-4 align-items-center">
+                                            <label class="col-lg-3 col-form-label">Bank <span class="text-secondary">(opsional)</span></label>
+                                            <div class="col-lg-9">
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <select name="bank_name" class="form-select @error('bank_name') is-invalid @enderror rounded-end-0" data-control="select2" data-placeholder="Pilih Bank">
+                                                            <option value="">Pilih Bank</option>
+                                                            @foreach ($banks as $bank)
+                                                                <option value="{{ $bank }}" {{ old('bank_name') == $bank || (isset($students) && $students->bank_name == $bank) ? 'selected' : '' }}>{{ $bank }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <input type="text" name="bank_number" class="fixed-width-70 form-control @error('bank_number') is-invalid @enderror" placeholder="Masukkan nomor rekening" value="{{ old('bank_number') ? old('bank_number') : (isset($students) ? $students->bank_number : '') }}">
+                                                    </div>
+                                                </div>
+                                                <div class="invalid-feedback">@error('bank_number') {{ $message }} @enderror</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-4 align-items-center">
+                                            <label class="col-lg-3 col-form-label">Nomor HP <span class="text-secondary">(Opsional)</span></label>
+                                            <div class="col-lg-9">
+                                                <input type="number" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone') ? old('phone') : (isset($students) ? $students->phone : '') }}">
+                                                <div class="invalid-feedback">@error('phone'){{ $message }}@enderror</div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <!--end::Card body-->
                                     <div class="card-footer text-end">
@@ -288,8 +253,7 @@
                             <!--end::Card-->
 
                             @isset($students)
-                            <!--begin::Card-->
-                            <div class="card pt-4 mb-6 mb-xl-9">
+                            {{-- <div class="card pt-4 mb-6 mb-xl-9">
                                 <!--begin::Card header-->
                                 <div class="card-header">
                                     <!--begin::Card title-->
@@ -320,7 +284,7 @@
                                 <!--end::Card body-->
                                 <!--begin::Card footer-->
                                 <!--end::Card footer-->
-                            </div>
+                            </div> --}}
                             @endisset
                             <!--end::Card-->
                             @isset($students)
@@ -338,27 +302,23 @@
                                 <!--end::Card header-->
                                 <!--begin::Card body-->
                                 <div class="card-body pb-5">
-                                    <div class="table-responsive">
-                                        <!--begin::Table-->
-                                        <table class="table align-middle gy-3" id="kt_table_users_login_session">
-                                            <!--begin::Table body-->
-                                            <tbody class="fs-6 fw-bold text-gray-600">
-                                                <tr>
-                                                    <td class="fixed-width-30">Email</td>
-                                                    <td class="fixed-width-70">
-                                                        {{$students->email}}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fixed-width-30">Tanggal Registrasi</td>
-                                                    <td class="fixed-width-70">
-                                                        {{ \App\Helpers\Timezone::display($students->created_at, true) }}
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            <!--end::Table body-->
-                                        </table>
-                                        <!--end::Table-->
+                                    <div class="row mb-4 align-items-center fs-6 fw-bold text-gray-600">
+                                        <label class="col-lg-3 col-form-label">Email</label>
+                                        <div class="col-lg-9">
+                                            {{$students->email}}
+                                            <span class="svg-icon svg-icon-primary svg-icon-1hx"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24">
+                                                <path d="M10.0813 3.7242C10.8849 2.16438 13.1151 2.16438 13.9187 3.7242V3.7242C14.4016 4.66147 15.4909 5.1127 16.4951 4.79139V4.79139C18.1663 4.25668 19.7433 5.83365 19.2086 7.50485V7.50485C18.8873 8.50905 19.3385 9.59842 20.2758 10.0813V10.0813C21.8356 10.8849 21.8356 13.1151 20.2758 13.9187V13.9187C19.3385 14.4016 18.8873 15.491 19.2086 16.4951V16.4951C19.7433 18.1663 18.1663 19.7433 16.4951 19.2086V19.2086C15.491 18.8873 14.4016 19.3385 13.9187 20.2758V20.2758C13.1151 21.8356 10.8849 21.8356 10.0813 20.2758V20.2758C9.59842 19.3385 8.50905 18.8873 7.50485 19.2086V19.2086C5.83365 19.7433 4.25668 18.1663 4.79139 16.4951V16.4951C5.1127 15.491 4.66147 14.4016 3.7242 13.9187V13.9187C2.16438 13.1151 2.16438 10.8849 3.7242 10.0813V10.0813C4.66147 9.59842 5.1127 8.50905 4.79139 7.50485V7.50485C4.25668 5.83365 5.83365 4.25668 7.50485 4.79139V4.79139C8.50905 5.1127 9.59842 4.66147 10.0813 3.7242V3.7242Z" fill="#00A3FF"/>
+                                                <path class="permanent" d="M14.8563 9.1903C15.0606 8.94984 15.3771 8.9385 15.6175 9.14289C15.858 9.34728 15.8229 9.66433 15.6185 9.9048L11.863 14.6558C11.6554 14.9001 11.2876 14.9258 11.048 14.7128L8.47656 12.4271C8.24068 12.2174 8.21944 11.8563 8.42911 11.6204C8.63877 11.3845 8.99996 11.3633 9.23583 11.5729L11.3706 13.4705L14.8563 9.1903Z" fill="white"/>
+                                              </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-4 align-items-center fs-6 fw-bold text-gray-600">
+                                        <label class="col-lg-3 col-form-label">Tanggal Registrasi</label>
+                                        <div class="col-lg-9">
+                                            {{ \App\Helpers\Timezone::display($students->created_at, true) }}
+                                        </div>
                                     </div>
                                 </div>
                                 <!--end::Card body-->

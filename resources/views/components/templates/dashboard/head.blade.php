@@ -13,6 +13,7 @@
     <!--begin::Global Stylesheets Bundle(used by all pages)-->
     <link href="{{URL::to('/')}}/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
     <link href="{{URL::to('/')}}/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="{{URL::to('/')}}/vendor/sweetalert/custom.css" rel="stylesheet" type="text/css" />
     <!--end::Global Stylesheets Bundle-->
     @yield('style')
 </head>

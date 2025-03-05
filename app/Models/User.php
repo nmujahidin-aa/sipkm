@@ -105,4 +105,8 @@ class User extends Authenticatable
         }
 
     }
+
+    public function belmawa(){
+        return $this->hasOne(Belmawa::class);
+    }
 }

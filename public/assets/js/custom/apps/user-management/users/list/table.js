@@ -135,10 +135,13 @@ var KTUsersList = function () {
             var nonOrderableColumns = [0, totalColumns - 1];
 
             e = $(o).DataTable({
-                info: true,
+                searching: true,
+                info: false,
+                paging: false,
                 order: [],
                 pageLength: 10,
-                lengthChange: true,
+                lengthChange: false,
+
                 columnDefs: nonOrderableColumns.map(col => ({
                     orderable: false,
                     targets: col

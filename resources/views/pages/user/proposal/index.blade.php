@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Data Proposal | SIPKM UM')
-
+@section('style')
+<link href="{{URL::to('/')}}/assets/css/custom.css" rel="stylesheet" type="text/css" />
+@endsection
 @section('breadcumb')
 <div class="page-title d-flex flex-column me-5">
     <!--begin::Title-->
@@ -43,10 +45,22 @@
                     </div>
                 </div>
                 <div>
-                    <a href="{{route('proposal.edit')}}" class="btn btn-primary">Ajukan</a>
+                    <a href="{{ route('proposal.edit') }}"
+                        class="btn btn-primary @if(isset($setting) && $setting->is_proposal_submission_open == 0) disabled @endif">
+                        Ajukan
+                    </a>
                 </div>
             </div>
-
+            <div class="separator my-2"></div>
+            @if ($proposal->isEmpty())
+                <div class="alert alert-warning fade show mb-5 d-flex align-items-center" role="alert">
+                    <i class="bi bi-info-circle fs-1 me-3 alert-heading"></i>
+                    <div>
+                        <h4 class="alert-heading mb-1">Tidak ada data</h4>
+                        <p class="mb-0">Belum ada data proposal yang diajukan per 2025.</p>
+                    </div>
+                </div>
+            @else
             @foreach ($proposal as $index => $row)
             <div class="card mb-6 mb-xl-9">
                 <div class="card-body pt-9 pb-0">
@@ -108,45 +122,44 @@
                                         <!--end::Label-->
                                     </div>
                                     <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                                        <!--begin::Label-->
-                                        <div class="d-flex align-items-center">
-                                            <!--begin:: Avatar -->
-                                            <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-                                                <a href="#">
-                                                    <div class="symbol-label">
-                                                        <img src="{{$advisor[$row->id]->user->getPhoto()}}" alt="{{$advisor[$row->id]->user->name ?? 'Tidak ada advisor'}}" style="object-fit: cover; object-position: top; width: 100%; height: 100%; display: block;"/>
+                                        @if (isset($advisor[$row->id]) && $advisor[$row->id]->isNotEmpty())
+                                            @php $advisorData = $advisor[$row->id]->first(); @endphp
+                                            <div class="d-flex align-items-center">
+                                                <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+                                                    <a href="#">
+                                                        <div class="symbol-label">
+                                                            <img src="{{ $advisorData->user->getPhoto() }}"
+                                                                 alt="{{ $advisorData->user->name ?? 'Tidak ada advisor' }}"
+                                                                 style="object-fit: cover; object-position: top; width: 100%; height: 100%; display: block;" />
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="d-flex flex-column" style="line-height: 1.2;">
+                                                    <a href="#" class="text-gray-800 text-hover-primary fw-bold mb-1"
+                                                       style="margin-bottom: 0.25rem !important;">
+                                                        {{ $advisorData->user->name ?? 'Tidak ada advisor' }}
+                                                    </a>
+                                                    <small class="text-muted" style="font-size: 12px; margin-bottom: 0.25rem !important;">
+                                                        NIP. {{ $advisorData->user->nip ?? '-' }}
+                                                    </small>
+                                                    <div class="d-flex flex-wrap gap-1 mt-1">
+                                                        <span class="badge fw-bolder text-{{ $advisorData->user->faculty->theme() }}"
+                                                              style="background-color: {{ $advisorData->user->faculty->color }};
+                                                                     font-size: 10px; padding: 0.25rem 0.5rem;">
+                                                            {{ $advisorData->user->faculty->name }}
+                                                        </span>
                                                     </div>
-                                                </a>
-                                            </div>
-                                            <!--end::Avatar-->
-                                            <!--begin::User details-->
-                                            <div class="d-flex flex-column" style="line-height: 1.2;">
-                                                <a href="#" class="text-gray-800 text-hover-primary fw-bold mb-1" style="margin-bottom: 0.25rem !important;">
-                                                    {{$advisor[$row->id]->user->name ?? 'Tidak ada advisor'}}
-                                                </a>
-                                                <small class="text-muted" style="font-size: 12px; margin-bottom: 0.25rem !important;">NIP. {{$advisor[$row->id]->user->nip ?? '-'}}</small>
-                                                <div class="d-flex flex-wrap gap-1 mt-1">
-                                                    <span class="badge fw-bolder text-{{$advisor[$row->id]->user->faculty->theme()}}"
-                                                          style="background-color: {{$advisor[$row->id]->user->faculty->color}}; font-size: 10px; padding: 0.25rem 0.5rem;">
-                                                        {{$advisor[$row->id]->user->faculty->name}}
-                                                    </span>
                                                 </div>
                                             </div>
-                                            <!--begin::User details-->
-                                        </div>
-                                        <!--end::Label-->
+                                        @else
+                                            <small class="text-danger">Dosen Pembimbing belum diatur</small>
+                                        @endif
                                     </div>
-                                    <!--end::Stat-->
-                                    <!--begin::Stat-->
                                     <div class="min-w-125px py-3 px-4 me-6 mb-3">
-                                        <!--begin::Number-->
                                         <div class="d-flex align-items-center">
                                             <div class="fw-bolder">Anggota :</div>
                                         </div>
-                                        <!--end::Number-->
-                                        <!--begin::Label-->
                                         <div class="symbol-group symbol-hover mb-3">
-                                            <!--begin::User-->
                                             @if ($proposal_member->has($row->id) && $proposal_member[$row->id]->count() > 0)
                                                 @foreach ($proposal_member[$row->id] as $member)
                                                     <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="{{ $member->user->name }}">
@@ -156,15 +169,9 @@
                                             @else
                                                 <small class="text-danger">Belum ada anggota</small>
                                             @endif
-                                            <!--end::User-->
                                         </div>
-                                        <!--end::Label-->
                                     </div>
-                                    <!--end::Stat-->
                                 </div>
-                                <!--end::Stats-->
-                                <!--begin::Users-->
-
                                 <!--end::Users-->
                             </div>
                             <!--end::Info-->
@@ -172,12 +179,27 @@
                         <!--end::Wrapper-->
                     </div>
                     <!--end::Details-->
+                    <div class="mb-3">
+                        @if ($row->status == 'reviewed')
+                            <span class="badge badge-primary">Status: Tahap Seleksi</span>
+                        @elseif ($row->status == 'accepted')
+                            <span class="badge badge-success">Status: Lolos Tahap Selanjutnya</span>
+                        @elseif ($row->status == 'rejected')
+                            <span class="badge badge-danger">Status: Tidak Lolos</span>
+                        @endif
+                    </div>
                     <div class="separator"></div>
                     <!--end::Nav wrapper-->
                 </div>
                 <div class="card-footer border-0">
                     <!--begin::Actions-->
                     <div class="d-flex mb-4 justify-content-end">
+                        <a href="{{ route('proposal.edit', $row->id) }}" class="btn btn-sm btn-warning me-3 text-dark position-relative">
+                            <i class="bi bi-pencil text-dark"></i> Log Catatan
+                            <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill @if (isset($proposalReview[$row->id]) && $proposalReview[$row->id]->count() > 0) bg-danger @else bg-success @endif">
+                                {{isset($proposalReview[$row->id]) ? $proposalReview[$row->id]->count() : 0}}
+                            </span>
+                        </a>
                         <a href="{{route('proposal.edit', $row->id)}}" class="btn btn-sm btn-primary me-3"><i class="bi bi-pencil"></i> Ubah</a>
                         <!--begin::Menu-->
                         <div class="me-0">
@@ -190,6 +212,8 @@
                 </div>
             </div>
             @endforeach
+            @endif
+            {{$proposal->links()}}
         </div>
         <!--end::Container-->
     </div>

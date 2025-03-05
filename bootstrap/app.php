@@ -15,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->as('auth.')
                 ->group(base_path('routes/auth.php'));
 
-            Route::middleware(['web'])
+            Route::middleware(['web', 'auth', 'admin'])
                 ->namespace('App\\Http\\Controllers\\Admin')
                 ->prefix('admin')
                 ->as('admin.')
@@ -23,7 +23,17 @@ return Application::configure(basePath: dirname(__DIR__))
         }
     )
     ->withMiddleware(function ($middleware) {
-        // Tambahkan middleware di sini jika perlu
+        $middleware->alias([
+            'auth' => \App\Http\Middleware\AuthenticateMiddleware::class,
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'profile' => \App\Http\Middleware\ProfileMiddleware::class,
+            'lecturer' => \App\Http\Middleware\LecturerAccessMiddleware::class,
+        ]);
+        $middleware->web(append: [
+            \Fahlisaputra\Minify\Middleware\MinifyHtml::class,
+            \Fahlisaputra\Minify\Middleware\MinifyCss::class,
+            \Fahlisaputra\Minify\Middleware\MinifyJavascript::class,
+        ]);
     })
     ->withExceptions(function ($exceptions) {
         // Tambahkan exception handler di sini jika perlu

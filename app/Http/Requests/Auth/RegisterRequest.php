@@ -13,36 +13,26 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => [
-                'required',
-            ],
             'email' => [
                 'required',
-                'unique:users,email'
-            ],
-            'nim' => [
-                'required',
-                'unique:users,nim'
+                'unique:users,email',
+                'ends_with:@students.um.ac.id'
             ],
             'password' => [
                 'required',
                 'min:8',
-                'confirmed',
-            ],
-            'study_program_id' => [
-                'required',
-            ],
+            ]
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required'     => 'Nama harus diisi',
             'email.required'    => 'Email harus diisi',
+            'email.unique'      => 'Email sudah terdaftar',
+            'email.ends_with'   => 'Harus menggunakan email UM',
             'password.required' => 'Password harus diisi',
             'password.min'      => 'Password minimal 8 karakter',
-            'password.confirmed'=> 'Password tidak sesuai',
         ];
     }
 

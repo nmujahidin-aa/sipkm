@@ -9,10 +9,9 @@
             <!--begin::Action wrapper-->
             <div class="d-flex align-items-center">
                 <!--begin::Label-->
-                <span class="fs-7 fw-bolder text-gray-700 pe-4 text-nowrap d-none d-xxl-block">Role</span>
-                <!--end::Label-->
-                <!--begin::Select-->
                 @if(auth()->user()->roles->count() > 1)
+                <span class="fs-7 fw-bolder text-gray-700 pe-4 text-nowrap d-none d-xxl-block">Role</span>
+                <!--begin::Select-->
                     <select class="form-select form-select-xl form-select-solid w-100px w-200px"
                             data-control="select2"
                             data-placeholder="{{ ucfirst(auth()->user()->currentRole()->name) }}"
