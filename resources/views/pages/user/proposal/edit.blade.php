@@ -197,7 +197,7 @@
                                         <div class="row mb-4 align-items-center">
                                             <label class="col-lg-3 col-form-label">Anggota Tim <span class="text-danger">*</span></label>
                                             <div class="col-lg-9">
-                                                <select name="members[]" class="form-select @error('members') is-invalid @enderror" data-control="select2" data-placeholder="Select an option" multiple="multiple" id="membersSelect" data-allow-clear="false">
+                                                <select name="members[]" class="form-select @error('members') is-invalid @enderror" data-control="select2" data-placeholder="Select an option" multiple="multiple" id="membersSelect">
                                                     <option></option>
                                                     @foreach ($members as $member)
                                                         <option value="{{ $member->id }}" {{ in_array($member->id, old('members', isset($proposal) ? $proposal->members->pluck('user_id')->toArray() : [])) ? 'selected' : '' }}>{{ $member->name }}/{{ $member->nim }}</option>
@@ -342,20 +342,18 @@
 <script src="{{URL::to('/')}}/assets/js/custom/apps/user-management/users/list/table.js"></script>
 <script>
 $(document).ready(function () {
-    var maxSelections = 4; // Batas maksimal pilihan
-    let selectedOrder = []; // Menyimpan urutan pemilihan
+    var maxSelections = 4;
+    let selectedOrder = []; 
 
-    // Inisialisasi Select2 tanpa sorting otomatis
     $('#membersSelect').select2({
         placeholder: "Select an option",
         multiple: true,
-        closeOnSelect: false, // Jangan tutup dropdown setelah memilih
+        closeOnSelect: false,
         sorter: function(data) {
-            return data; // Nonaktifkan sorting otomatis Select2
+            return data;
         }
     });
 
-    // Fungsi untuk menginisialisasi selectedOrder dari nilai select2 yang sudah ada.
     function initializeSelectedOrder() {
         var initialValues = $('#membersSelect').val();
         if (initialValues) {
@@ -364,47 +362,43 @@ $(document).ready(function () {
         updateSelection();
     }
 
-    // Mengaktifkan atau menonaktifkan opsi berdasarkan jumlah pilihan
     function toggleOptions() {
         var options = $('#membersSelect option');
         if (selectedOrder.length >= maxSelections) {
             options.each(function () {
                 if (!selectedOrder.includes($(this).val())) {
-                    $(this).prop('disabled', true); // Menonaktifkan opsi yang belum dipilih
+                    $(this).prop('disabled', true);
                 }
             });
         } else {
-            options.prop('disabled', false); // Mengaktifkan kembali semua opsi jika di bawah batas
+            options.prop('disabled', false); 
         }
+        $('#membersSelect').trigger('change');
     }
 
-    // Event ketika opsi dipilih
     $('#membersSelect').on('select2:select', function (e) {
         var selectedId = e.params.data.id;
-        if (!selectedOrder.includes(selectedId)) {
+        if (selectedOrder.length < maxSelections && !selectedOrder.includes(selectedId)) {
             selectedOrder.push(selectedId);
+        } else {
+            $('#membersSelect').val(selectedOrder).trigger('change');
         }
         updateSelection();
     });
 
-    // Event ketika opsi dihapus
     $('#membersSelect').on('select2:unselect', function (e) {
         var removedId = e.params.data.id;
         selectedOrder = selectedOrder.filter(id => id !== removedId);
         updateSelection();
     });
 
-    // Fungsi memperbarui select dan input tersembunyi
     function updateSelection() {
-        // Set ulang nilai select2 dengan urutan yang disimpan
         $('#membersSelect').val(selectedOrder).trigger('change.select2');
-        $('#membersOrder').val(selectedOrder.join(',')); // Simpan urutan sebagai string
+        $('#membersOrder').val(selectedOrder.join(','));
         toggleOptions();
     }
 
-    // Inisialisasi selectedOrder saat halaman dimuat
     initializeSelectedOrder();
 });
-
 </script>
 @endsection

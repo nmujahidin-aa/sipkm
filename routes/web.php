@@ -36,6 +36,7 @@ Route::group(['namespace'=>'App\Http\Controllers', 'middleware' => ['auth']], fu
         Route::get('proposal/{proposal_id}/review/{id?}', [ProposalController::class, 'review'])->name('proposal.review');
 
         Route::get('/belmawa', [BelmawaController::class, 'index'])->name('belmawa.index');
+        Route::get('/agenda', [AgendaController::class, 'index'])->name('agenda.index');
     });
 
     // Route untuk dosen

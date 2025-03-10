@@ -38,4 +38,5 @@ Route::group(["middleware"=>"auth"], function(){
 
     RouteHelper::make('belmawa', 'belmawa', BelmawaController::class);
     RouteHelper::make('setting', 'setting', SettingController::class);
+    RouteHelper::make('agenda', 'agenda', AgendaController::class);
 });
