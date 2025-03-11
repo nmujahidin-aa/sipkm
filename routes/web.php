@@ -8,6 +8,8 @@ use App\Http\Controllers\User\ProposalController;
 use App\Http\Controllers\Lecturer\ProposalController as LecturerProposalController;
 use App\Http\Controllers\User\BelmawaController;
 use App\Http\Controllers\User\ChangePasswordController as ChangePassword;
+use App\Http\Controllers\User\DashboardController;
+use App\Http\Controllers\User\AgendaController;
 
 /*
 |--------------------------------------------------------------------------

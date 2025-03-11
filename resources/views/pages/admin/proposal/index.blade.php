@@ -58,7 +58,7 @@
         <div id="kt_content_container" class="container-fluid">
             <!--begin::Card-->
             <div class="card">
-                <x-organisms.card-header filter="true"/>
+                <x-organisms.card-header filter="true" export="true" btnExport="{{ route('admin.proposal.export', request()->query()) }}" />
                 <!--begin::Card body-->
                 <div class="card-body pt-0">
                     <!--begin::Table-->

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\StudyProgramController;
 use App\Http\Controllers\Admin\ProposalController;
 use App\Http\Controllers\Admin\BelmawaController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\AgendaController;
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
@@ -35,6 +36,8 @@ Route::group(["middleware"=>"auth"], function(){
     Route::post('proposal/review/upload', [ProposalController::class, 'upload'])->name('proposal.reviewUpload');
     Route::post('proposal/{proposal_id}/review', [ProposalController::class, 'storeReview'])->name('proposal.storeReview');
     Route::get('proposal/{proposal_id}/review/{id?}', [ProposalController::class, 'review'])->name('proposal.review');
+    Route::get('proposal/export', [ProposalController::class, 'export'])->name('proposal.export');
+
 
     RouteHelper::make('belmawa', 'belmawa', BelmawaController::class);
     RouteHelper::make('setting', 'setting', SettingController::class);

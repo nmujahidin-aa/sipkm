@@ -206,7 +206,17 @@
                                                 <div class="invalid-feedback">@error('members') {{ $message }} @enderror</div>
                                             </div>
                                         </div>
+
+                                        <div class="row mb-4 align-items-center">
+                                            <label class="col-lg-3 col-form-label">Catatan <span class="text-secondary">(opsional)</span></label>
+                                            <div class="col-lg-9">
+                                                <textarea class="form-control" name="note" id="note">{{ isset($proposal->note) ? $proposal->note : " " }}</textarea>
+                                                <div class="invalid-feedback">@error('note') {{ $message }} @enderror</div>
+                                            </div>
+                                        </div>
                                     </div>
+
+                                    
 
                                     <div class="card-footer text-end">
                                         <button type="submit" class="btn btn-primary" @if(isset($proposal) && $proposal->status == "rejected") disabled @endif>Simpan</button>

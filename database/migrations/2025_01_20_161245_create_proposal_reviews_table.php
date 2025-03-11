@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('reviewer_id')->constrained('users')->onDelete('cascade');
             $table->boolean('status')->default(false);
             $table->string('title')->nullable();
+            $table->string('file')->nullable();
             $table->text('comment')->nullable();
             $table->text('feedback')->nullable();
             $table->timestamps();

@@ -287,6 +287,16 @@
                                         </label>
                                         @endforeach
                                     </div>
+                                    <div class="d-flex flex-wrap align-items-start row">
+                                        <label class="form-check-label col-12">
+                                            <div class="fw-bolder mb-3">Catatan</div>
+                                            <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                                                <div class="d-flex align-items-center">
+                                                    <p class="text-danger">{{$proposal->note}}</p>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             @endisset

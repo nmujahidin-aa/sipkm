@@ -1,4 +1,4 @@
-@props(['export' => false, 'filter' => false, 'add' => false, 'addHref' => '#'])
+@props(['export' => false, 'filter' => false, 'add' => false, 'addHref' => '#', 'btnExport' => '#'])
 <div class="card-header border-0 pt-6">
     <!--begin::Card title-->
     <div class="card-title">
@@ -35,7 +35,7 @@
             @endif
 
             @if($export)
-            <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="modal">
+            <a href="{{ $btnExport}}" class="btn btn-light-primary me-3">
                 <!--begin::Svg Icon | path: icons/duotune/arrows/arr078.svg-->
                 <span class="svg-icon svg-icon-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">

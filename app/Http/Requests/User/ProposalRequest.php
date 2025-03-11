@@ -23,6 +23,7 @@ class ProposalRequest extends FormRequest
     {
         $rules = [
             'title' => ['required', 'string'],
+            'note' => ['nullable'],
             'leader_id' => ['required', 'exists:users,id'],
             'team_name' => ['required', 'string'],
             'advisors' => ['required', 'string'],

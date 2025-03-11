@@ -10,6 +10,7 @@ use App\Models\Faculty;
 use App\Models\ProposalReview;
 use App\Http\Requests\Admin\ProposalRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Env;
 
 class ProposalController extends Controller
 {
@@ -170,5 +171,71 @@ class ProposalController extends Controller
             $url = asset('storage/'.$fileName);
             return response()->json(['fileName' => $fileName, 'uploaded' => 1, 'url' => $url]);
         }
+    }
+
+    public function export(Request $request)
+    {
+        $schemes = $request->input('filter_scheme', '');
+        $facultyId = $request->input('filter_faculty', 'all');
+        $status = $request->input('filter_status', 'all');
+
+        // Query dasar dengan eager loading
+        $query = Proposal::with(['leader', 'faculty', 'advisor', 'proposalReview']);
+
+        // Terapkan filter yang sama seperti di index
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
+                ->orWhere('team_name', 'LIKE', "%{$search}%")
+                ->orWhereHas('leader', function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%");
+                });
+            });
+        }
+
+        if (!empty($schemes)) {
+            $schemesArray = explode(',', $schemes);
+            $query->whereIn('scheme', $schemesArray);
+        }
+
+        if ($facultyId !== 'all') {
+            $query->where('faculty_id', $facultyId);
+        }
+
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        $data = $query->get();
+
+        // Buat nama file CSV
+        $filename = 'proposal_' . date('Y-m-d_H-i-s') . '.csv';
+        $fp = fopen($filename, 'w+');
+
+        // Tulis header CSV
+        fputcsv($fp, ['Skema', 'Judul', 'Nama Ketua', 'Link Proposal']);
+
+        // Tulis data proposal ke CSV
+        foreach ($data as $proposal) {
+            $file = url('storage/' . $proposal->file);
+
+            fputcsv($fp, [
+                $proposal->scheme,
+                $proposal->title,
+                $proposal->leader->name,
+                $file
+            ]);
+        }
+
+        // Tutup file CSV
+        fclose($fp);
+
+        // Set header untuk respons download
+        $headers = [
+            'Content-Type' => 'text/csv',
+        ];
+
+        // Kembalikan file CSV sebagai respons download
+        return response()->download($filename, 'proposal.csv', $headers)->deleteFileAfterSend(true);
     }
 }
