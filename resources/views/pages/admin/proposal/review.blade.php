@@ -70,7 +70,7 @@
                         <!--begin:::Tab pane-->
                         <div class="tab-pane fade show active" id="kt_user_view_overview_security" role="tabpanel">
                             <!--begin::Card-->
-                            <form action="{{route('admin.proposal.storeReview', $proposal_id)}}" method="POST">
+                            <form action="{{route('admin.proposal.storeReview', $proposal_id)}}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="card pt-4 mb-6 mb-xl-9">
                                     <!--begin::Card header-->
@@ -101,7 +101,7 @@
                                             </div>
                                         </div>
                                         <div class="row mb-3 align-items-center">
-                                            <label class="col-lg-3 col-form-label fw-bolder text-dark">Judul Catatan</label>
+                                            <label class="col-lg-3 col-form-label fw-bolder text-dark">Judul Catatan <span class="text-danger">*</span></label>
                                             <div class="col-lg-9">
                                                 <input type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') ? old('title') : (isset($proposalReview) ? $proposalReview->title : '') }} " @if(isset($proposalReview) && $proposalReview->status == 1) disabled @endif>
                                                 <div class="invalid-feedback">@error('title'){{ $message }}@enderror</div>
@@ -112,6 +112,13 @@
                                             <div class="col-lg-9">
                                                 <textarea class="form-control @error('comment') is-invalid @enderror" name="comment" id="comment" rows="3" @if(isset($proposalReview) && $proposalReview->status == 1) disabled @endif>{{isset($proposalReview) ? $proposalReview->comment : ''}}</textarea>
                                                 <div class="invalid-feedback">@error('comment'){{ $message }}@enderror</div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3 align-items-center">
+                                            <label class="col-lg-3 col-form-label fw-bolder text-dark">File Catatan <span class="text-secondary">(opsionala)</span></label>
+                                            <div class="col-lg-9">
+                                                <input type="file" class="form-control @error('file') is-invalid @enderror" name="file" >
+                                                <div class="invalid-feedback">@error('file'){{ $message }}@enderror</div>
                                             </div>
                                         </div>
 

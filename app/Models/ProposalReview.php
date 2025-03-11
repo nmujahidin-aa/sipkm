@@ -13,7 +13,8 @@ class ProposalReview extends Model
         'title',
         'status',
         'comment',
-        'feedback'
+        'feedback',
+        'file',
     ];
 
     public function proposal()

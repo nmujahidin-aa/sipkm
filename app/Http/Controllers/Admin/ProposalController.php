@@ -143,21 +143,30 @@ class ProposalController extends Controller
         ]);
     }
 
-    public function storeReview(string $proposal_id, ProposalRequest $request){
+    public function storeReview(string $proposal_id, ProposalRequest $request)
+    {
         $validatedData = $request->validated();
         $validatedData['proposal_id'] = $proposal_id;
 
-        if ($request->has('id')) {
-            $proposalReview = $this->proposalReview::findOrFail($request->id);
-            $this->authorize('update', $proposalReview);
-            $proposalReview->update($validatedData);
-            alert()->html('Berhasil', 'Data berhasil diperbarui', 'success');
-            return redirect()->route($this->route . 'edit', ['id' => $proposal_id]);
-        } else {
-            $proposalReview = $this->proposalReview::create($validatedData);
-            alert()->html('Berhasil', 'Data berhasil ditambahkan', 'success');
-            return redirect()->route($this->route . 'edit', ['id' => $proposal_id]);
+        // Handle file upload
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $validatedData['file'] = $file->storeAs('review', $fileName, 'public');
+        } elseif (isset($proposal) && $proposal->file) {
+            // Jika tidak ada file baru, pertahankan file lama
+            $validatedData['file'] = $proposal->file;
         }
+
+        $proposalReview = $this->proposalReview::updateOrCreate(
+            ['id' => $request->id],
+            $validatedData   
+        );
+
+        $this->authorize('update', $proposalReview);
+
+        alert()->html('Berhasil', 'Data berhasil diperbarui', 'success');
+        return redirect()->route($this->route . 'edit', ['id' => $proposal_id]);
     }
 
     public function upload(Request $request){

@@ -353,6 +353,7 @@
                                             <!--begin::Table row-->
                                             <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
                                                 <th class="min-w-250px">Judul Catatan</th>
+                                                <th class="w-150px">File</th>
                                                 <th class="min-w-250px">Tanggapan</th>
                                                 <th class="w-250px">Reviewer</th>
                                                 <th class="w-150px">Status</th>
@@ -373,8 +374,16 @@
                                                     </div>
                                                 </td>
                                                 <td>
+                                                    @if ($row->file)
+                                                        <a href="{{ asset('storage/' . $row->file) }}" target="_blank" class="badge badge-primary fw-bolder text-light">LIHAT FILE <i class="bi bi-box-arrow-up-right fs-7 text-light fw-bolder" style="margin-left: 5px;"></i> </a>
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
+                                                <td>
                                                     {{$row->feedback ? $row->feedback : '-'}}
                                                 </td>
+
                                                 <td>
                                                     {{$row->reviewer->name}}
                                                 </td>

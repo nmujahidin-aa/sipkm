@@ -23,9 +23,10 @@ class ProposalRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:250'],
-            'comment' => ['required', 'string'],
+            'comment' => ['nullable'],
             'feedback' => ['nullable', 'string', 'max:250'],
             'status' => ['nullable', 'boolean'],
+            'file' => ['nullable', 'file', 'mimes:pdf', 'max:5120'],
             'proposal_id' => ['nullable', 'integer'],
             'reviewer_id' => ['nullable', 'integer'],
         ];
@@ -41,8 +42,9 @@ class ProposalRequest extends FormRequest
         return [
             'title.required' => 'Judul Catatan harus diisi',
             'title.max' => 'Maximal 250 karakter',
-            'comment.required' => 'Komentar harus diisi',
-            'comment.max' => 'Maximal 250 Karakter',
+            'feedback.max' => 'Maximal 250 karakter',
+            'file.mimes' => 'File harus berformat pdf',
+            'file.max' => 'File maksimal 5MB',
         ];
     }
 }

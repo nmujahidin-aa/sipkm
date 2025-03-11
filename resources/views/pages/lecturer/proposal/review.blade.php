@@ -114,6 +114,13 @@
                                                 <div class="invalid-feedback">@error('comment'){{ $message }}@enderror</div>
                                             </div>
                                         </div>
+                                        <div class="row mb-3 align-items-center">
+                                            <label class="col-lg-3 col-form-label fw-bolder text-dark">File Catatan <span class="text-secondary">(opsionala)</span></label>
+                                            <div class="col-lg-9">
+                                                <input type="file" class="form-control @error('file') is-invalid @enderror" name="file" >
+                                                <div class="invalid-feedback">@error('file'){{ $message }}@enderror</div>
+                                            </div>
+                                        </div>
 
                                         @if (isset($proposalReview) && $proposalReview->status == 1)
                                         <div class="row mb-3 align-items-center">
