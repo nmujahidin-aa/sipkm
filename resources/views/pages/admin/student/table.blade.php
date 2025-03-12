@@ -33,14 +33,21 @@
                     </a>
                     <small class="text-muted" style="font-size: 12px; margin-bottom: 0.25rem !important;">NIM. {{$row->nim ?: '-'}}</small>
                     <div class="d-flex flex-wrap gap-1 mt-1">
-                        <span class="badge fw-bolder text-{{$row->faculty->theme()}}"
-                              style="background-color: {{$row->faculty->color}}; font-size: 10px; padding: 0.25rem 0.5rem;">
-                            {{$row->faculty->short_name}}
-                        </span> |
-                        <span class="badge fw-bolder text-{{$row->faculty->theme()}}"
-                              style="background-color: {{$row->faculty->color}}; font-size: 10px; padding: 0.25rem 0.5rem;">
-                            {{$row->studyProgram->name}}
-                        </span>
+                        @if($row->faculty && $row->studyProgram)
+                            <span class="badge fw-bolder text-{{$row->faculty->theme()}}"
+                                style="background-color: {{$row->faculty->color}}; font-size: 10px; padding: 0.25rem 0.5rem;">
+                                {{$row->faculty->short_name}}
+                            </span> |
+                            <span class="badge fw-bolder text-{{$row->faculty->theme()}}"
+                                style="background-color: {{$row->faculty->color}}; font-size: 10px; padding: 0.25rem 0.5rem;">
+                                {{$row->studyProgram->name}}
+                            </span>
+                        @else
+                            <span class="badge fw-bolder text-danger" 
+                                style="background-color: white; font-size: 10px; padding: 0.25rem 0.5rem;">
+                                -
+                            </span>
+                        @endif
                     </div>
                 </div>
                 <!--begin::User details-->

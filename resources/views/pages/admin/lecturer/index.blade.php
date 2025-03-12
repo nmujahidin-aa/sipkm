@@ -221,7 +221,7 @@
             $.ajax({
                 url: url,
                 success: function(data) {
-                    $('#studentsTable').html(data); // Perbarui tabel dengan data baru
+                    $('#lecturersTable').html(data); // Perbarui tabel dengan data baru
                 }
             });
         }
@@ -229,7 +229,7 @@
         // AJAX Search
         $('#searchInput').on('keyup', function() {
             let search = $(this).val();
-            let url = "{{ route('admin.student.index') }}?";
+            let url = "{{ route('admin.lecturer.index') }}?";
             const params = new URLSearchParams();
 
             const role = $('input[name="filter_role"]:checked').val();
