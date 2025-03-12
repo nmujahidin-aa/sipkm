@@ -89,19 +89,19 @@ class User extends Authenticatable
             $nim_year = $year . $nim_year;
 
             if ($nim == null) {
-                return "https://ui-avatars.com/api/?name=" . $this->name . "&color=7F9CF5&background=EBF4FF";
+                return "https://ui-avatars.com/api/?name=" . $this->email . "&color=7F9CF5&background=EBF4FF";
             } else {
                 return "https://api.um.ac.id/akademik/operasional/GetFoto.ptikUM?nim=" . $nim . '&angkatan=' . $nim_year;
             }
         } elseif ($this->hasRole([RoleEnum::DOSEN, RoleEnum::PENALARAN])) {
             $nip = $this->nip;
             if ($nip == null) {
-                return "https://ui-avatars.com/api/?name=" . $this->name . "&color=7F9CF5&background=EBF4FF";
+                return "https://ui-avatars.com/api/?name=" . $this->email . "&color=7F9CF5&background=EBF4FF";
             } else {
                 return "https://simpega.um.ac.id/util/pegawai/foto/" . $nip;
             }
         } else {
-            return "https://ui-avatars.com/api/?name=" . $this->name . "&color=7F9CF5&background=EBF4FF";
+            return "https://ui-avatars.com/api/?name=" . $this->email . "&color=7F9CF5&background=EBF4FF";
         }
 
     }

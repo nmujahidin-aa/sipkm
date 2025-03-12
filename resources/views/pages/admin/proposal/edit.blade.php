@@ -263,10 +263,11 @@
                                                     <!--begin::User details-->
                                                     <div class="d-flex flex-column" style="line-height: 1.2;">
                                                         <div class="text-gray-800 fw-bold mb-1" style="margin-bottom: 0.25rem !important;">
-                                                            {{$member->user->name}}
+                                                            {{$member->user->name ?: '-'}}
                                                         </div>
                                                         <small class="text-muted" style="font-size: 12px; margin-bottom: 0.25rem !important;">NIM. {{$member->user->nim ?: '-'}}</small>
                                                         <div class="d-flex flex-wrap gap-1 mt-1">
+                                                            @if($member->user->faculty && $member->user->studyProgram)
                                                             <span class="badge fw-bolder text-{{$member->user->faculty->theme()}}"
                                                                 style="background-color: {{$member->user->faculty->color}}; font-size: 10px; padding: 0.25rem 0.5rem;">
                                                                 {{$member->user->faculty->short_name}}
@@ -275,6 +276,12 @@
                                                                 style="background-color: {{$member->user->faculty->color}}; font-size: 10px; padding: 0.25rem 0.5rem;">
                                                                 {{$member->user->studyProgram->name}}
                                                             </span>
+                                                            @else
+                                                            <span class="badge fw-bolder text-danger"
+                                                                style="background-color: white; font-size: 10px; padding: 0.25rem 0.5rem;">
+                                                                -
+                                                            </span>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                     <!--begin::User details-->

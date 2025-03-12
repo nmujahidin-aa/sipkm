@@ -23,13 +23,13 @@
                 <!--begin::User details-->
                 <div class="d-flex flex-column" style="line-height: 1.2;">
                     <a href="#" class="text-gray-800 text-hover-primary fw-bold mb-1" style="margin-bottom: 0.25rem !important;">
-                        {{$row->leader->name}}
+                        {{$row->leader->name ?: '-'}}
                     </a>
                     <small class="text-muted" style="font-size: 12px; margin-bottom: 0.25rem !important;">NIM. {{$row->leader->nim ?: '-'}}</small>
                     <div class="d-flex flex-wrap gap-1 mt-1">
-                        <span class="badge fw-bolder text-{{$row->leader->faculty->theme()}}"
-                            style="background-color: {{$row->leader->faculty->color}}; font-size: 10px; padding: 0.25rem 0.5rem;">
-                          {{$row->leader->studyProgram->name}}
+                        <span class="badge fw-bolder text-{{ $row->leader->faculty ? $row->leader->faculty->theme() : 'dark' }}"
+                            style="background-color: {{ $row->leader->faculty ? $row->leader->faculty->color : '#fff' }}; font-size: 10px; padding: 0.25rem 0.5rem;">
+                          {{$row->leader->studyProgram->name ?? '-'}}
                       </span>
                     </div>
                 </div>
