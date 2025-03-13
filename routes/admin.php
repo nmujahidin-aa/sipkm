@@ -29,7 +29,11 @@ use App\Http\Controllers\Admin\AgendaController;
 
 Route::group(["middleware"=>"auth"], function(){
     RouteHelper::make('student', 'student', StudentController::class);
+    Route::get('student/export', [StudentController::class, 'export'])->name('student.export');
+
     RouteHelper::make('lecturer', 'lecturer', LecturerController::class);
+    Route::get('lecturer/export', [LecturerController::class, 'export'])->name('lecturer.export');
+
     RouteHelper::make('study-program', 'study-program', StudyProgramController::class);
 
     RouteHelper::make('proposal', 'proposal', ProposalController::class);

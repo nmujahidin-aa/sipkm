@@ -124,4 +124,68 @@ class LecturerController extends Controller
         alert()->html('Berhasil', 'Data berhasil dihapus', 'success');
         return redirect()->route($this->route . 'index');
     }
+
+    public function export(Request $request)
+    {
+        $facultyId = $request->input('filter_faculty', 'all');
+        $role = $request->input('filter_role', 'all');
+
+        // Query dasar: Hanya mengambil users yang memiliki RoleEnum::DOSEN
+        $query = User::whereHas('roles', function ($q) {
+            $q->where('name', RoleEnum::DOSEN);
+        })->with('faculty');
+
+        // Jika ada filter role yang dipilih, tambahkan kondisi untuk role tersebut
+        if ($role !== 'all') {
+            $query->whereHas('roles', function ($q) use ($role) {
+                $q->where('name', $role);
+            });
+        }
+
+        // Filter berdasarkan pencarian
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('nip', 'LIKE', "%{$search}%")
+                ->orWhere('email', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Filter berdasarkan fakultas
+        if ($facultyId !== 'all') {
+            $query->where('faculty_id', $facultyId);
+        }
+
+        // Paginate hasil query
+        $data = $query->get();
+        // Buat nama file CSV
+        $filename = 'DataDosen_' . date('Y-m-d_H-i-s') . '.csv';
+        $fp = fopen($filename, 'w+');
+
+        // Tulis header CSV
+        fputcsv($fp, ['Nama', 'email', 'NIP', 'Password', 'Fakultas']);
+
+        // Tulis data proposal ke CSV
+        foreach ($data as $lecturer) {
+
+            fputcsv($fp, [
+                $lecturer->name,
+                $lecturer->email,
+                $lecturer->nip,
+                'password',
+                $lecturer->faculty->short_name,
+            ]);
+        }
+
+        // Tutup file CSV
+        fclose($fp);
+
+        // Set header untuk respons download
+        $headers = [
+            'Content-Type' => 'text/csv',
+        ];
+
+        // Kembalikan file CSV sebagai respons download
+        return response()->download($filename, 'DataDosen.csv', $headers)->deleteFileAfterSend(true);
+    }
 }

@@ -59,7 +59,7 @@
             <!--begin::Card-->
             <div class="card">
                 <!--begin::Card header-->
-                <x-organisms.card-header filter="true" add="true" addHref="{{ route('admin.lecturer.edit') }}" />
+                <x-organisms.card-header filter="true" add="true" addHref="{{ route('admin.lecturer.edit') }}" export="true" btnExport="{{ route('admin.lecturer.export', request()->query()) }}"/>
                 <!--end::Card header-->
                 <!--begin::Card body-->
                 <div class="card-body pt-0">

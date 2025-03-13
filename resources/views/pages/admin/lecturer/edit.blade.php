@@ -276,20 +276,14 @@
                             </form>
                             <!--end::Card-->
 
-                            @isset($lecturers)
-                            <!--begin::Card-->
+                            <!-- @isset($lecturers)
                             <div class="card pt-4 mb-6 mb-xl-9">
-                                <!--begin::Card header-->
                                 <div class="card-header">
-                                    <!--begin::Card title-->
                                     <div class="card-title flex-column">
                                         <h2>Riwayat Bimbingan Proposal</h2>
                                         <div class="fs-6 fw-bold text-muted">Berikut merupakan riwayat bimbingan proposal anda</div>
                                     </div>
-                                    <!--end::Card title-->
                                 </div>
-                                <!--end::Card header-->
-                                <!--begin::Card body-->
                                 <div class="card-body">
                                     <div class="d-flex">
                                         <label class="form-check-label" for="kt_modal_update_email_notification_0">
@@ -306,11 +300,10 @@
                                     </div>
                                     <div class='separator separator-dashed my-5'></div>
                                 </div>
-                                <!--end::Card body-->
-                                <!--begin::Card footer-->
-                                <!--end::Card footer-->
                             </div>
-                            @endisset
+                            @endisset -->
+
+                            
                             <!--end::Card-->
                             @isset($lecturers)
                             <!--begin::Card-->
