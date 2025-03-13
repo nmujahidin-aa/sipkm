@@ -29,7 +29,7 @@
                     <!--begin::Input group-->
                     <div class="fv-row mb-10">
                         <label class="form-label fs-6 fw-bolder text-dark">Nama Pengguna</label>
-                        <input class="form-control form-control-lg form-control-solid @error('username') is-invalid @enderror" type="text" name="username" value="{{ old('username') }}" autocomplete="off" placeholder="NIM/NIDN/NUPTK/Email @um.ac.id anda"/>
+                        <input class="form-control form-control-lg form-control-solid @error('username') is-invalid @enderror w-400px" type="text" name="username" value="{{ old('username') }}" autocomplete="off" placeholder="NIM/NIDN/NUPTK/Email @um.ac.id anda"/>
                         @error('username')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -38,9 +38,9 @@
                     <div class="fv-row mb-10">
                         <div class="d-flex flex-stack mb-2">
                             <label class="form-label fw-bolder text-dark fs-6 mb-0">Password</label>
-                            <a href="#" class="link-primary fs-6 fw-bolder">Lupa Password ?</a>
+                            <a href="{{route('auth.reset-password.index')}}" class="link-primary fs-6 fw-bolder">Lupa Password ?</a>
                         </div>
-                        <input class="form-control form-control-lg form-control-solid @error('password') is-invalid @enderror" type="password" name="password" autocomplete="off" placeholder="Masukkan Password"/>
+                        <input class="form-control form-control-lg form-control-solid @error('password') is-invalid @enderror w-400px" type="password" name="password" autocomplete="off" placeholder="Masukkan Password"/>
                         @error('password')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror

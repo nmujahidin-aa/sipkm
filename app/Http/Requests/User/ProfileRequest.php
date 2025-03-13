@@ -37,7 +37,7 @@ class ProfileRequest extends FormRequest
             'nim' => [
                 'nullable',
             ],
-            'nind' => [
+            'nidn' => [
                 'nullable',
             ],
             'nip' => [

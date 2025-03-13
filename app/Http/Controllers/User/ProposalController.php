@@ -116,7 +116,7 @@ class ProposalController extends Controller
         $proposal = $request->has('id') ? $this->proposal::findOrFail($request->id) : null;
 
         // Upload file jika ada file baru yang diunggah
-        if ($request->hasFile('file')) {
+        if ($request->hasFile('file')) { 
             $user = User::findOrFail($request->leader_id);
             $name = preg_replace('/\s+/', '', $user->name);
             $fileName = $name . '_UniversitasNegeriMalang_' . $request->scheme . '.' . $request->file->getClientOriginalExtension();

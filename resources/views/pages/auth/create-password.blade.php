@@ -1,9 +1,9 @@
 @extends('layouts.auth')
-@section('title','Daftar | SIPKM-UM')
+@section('title','Masuk | SIPKM-UM')
 @section('content')
 <div class="d-flex flex-column flex-root">
     <!--begin::Authentication - Sign-in -->
-    <div class="d-flex flex-column flex-column-fluid" >
+    <div class="d-flex flex-column flex-column-fluid">
         <!--begin::Content-->
         <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
             <!--begin::Logo-->
@@ -14,39 +14,39 @@
             <!--begin::Wrapper-->
             <div class="">
                 <!--begin::Form-->
-                <form class="form w-100" action="{{route('auth.register.post')}}" method="POST">
+                <form class="form w-100" action="{{route('auth.reset-password.reset')}}" method="POST">
                     @csrf
+
                     <!--begin::Heading-->
                     <div class="text-center mb-10">
                         <!--begin::Title-->
-                        <h1 class="text-dark mb-3">Daftar ke SIPKM UM</h1>
+                        <h1 class="text-dark mb-3">Buat Kata Sandi Baru</h1>
                         <!--end::Title-->
                         <!--begin::Link-->
-                        <div class="text-gray-500 fs-5 px-10">Sudah punya akun SIPKM UM? <a href="{{route('auth.login.index')}}" class="text-primary">Masuk</a> </div>
+                        <div class="text-gray-500 fs-5">Sudah ingat kata sandi? <a href="{{route('auth.login.index')}}" class="text-primary">Masuk</a> </div>
                         <!--end::Link-->
                     </div>
                     <!--end::Heading-->
                     <!--begin::Input group-->
+                    <input type="text" name="token" value="{{$token}}" hidden>
                     <div class="fv-row mb-10">
-                        <label class="form-label fs-6 fw-bolder text-dark">Email</label>
-                        <input class="form-control form-control-lg form-control-solid @error('email') is-invalid @enderror w-400px" type="text" name="email" value="{{ old('email') }}" autocomplete="off" placeholder="Email @um.ac.id anda"/>
-                        @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <!--end::Input group-->
-                    <div class="fv-row mb-10">
-                        <div class="d-flex flex-stack mb-2">
-                            <label class="form-label fw-bolder text-dark fs-6 mb-0">Password</label>
-                        </div>
-                        <input class="form-control form-control-lg form-control-solid @error('password') is-invalid @enderror w-400px" type="password" name="password" autocomplete="off" placeholder="Masukkan Password"/>
+                        <label class="form-label fs-6 fw-bolder text-dark">Password Baru</label>
+                        <input class="form-control form-control-lg form-control-solid @error('password') is-invalid @enderror w-400px" type="password" name="password" autocomplete="off"/>
                         @error('password')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="text-cen ter">
+
+                    <div class="fv-row mb-10">
+                        <label class="form-label fs-6 fw-bolder text-dark">Konfirmasi Password Baru</label>
+                        <input class="form-control form-control-lg form-control-solid @error('password_confirmation') is-invalid @enderror w-400px" type="password" name="password_confirmation" autocomplete="off"/>
+                        @error('password_confirmation')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="text-center">
                         <button type="submit" class="btn btn-lg btn-primary w-100 mb-5">
-                            <span class="indicator-label">Daftar</span>
+                            <span class="indicator-label">Masuk</span>
                             <span class="indicator-progress">Please wait...
                                 <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                         </button>
@@ -61,6 +61,9 @@
             </div>
             <!--end::Wrapper-->
         </div>
+        <!--end::Content-->
+        <!--begin::Footer-->
+        <!--end::Footer-->
     </div>
     <!--end::Authentication - Sign-in-->
 </div>
