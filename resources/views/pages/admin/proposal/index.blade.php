@@ -94,6 +94,25 @@
         <div class="card-body" id="kt_explore_body">
             <!--begin::Content-->
             <div id="kt_explore_scroll" class="scroll-y me-n5 pe-5">
+
+                <div class="d-grid gap-2 mb-2">
+                    <span class="text-cap fw-bold fs-6">Tahun</span>
+                    <div class="d-grid gap-2" id="filter_year_container">
+                        <!-- Select Option dengan opsi "Semua Tahun" -->
+                        <select name="filter_year" id="filter_year" class="form-select" data-control="select2">
+                            <option value="all">Semua Tahun</option> <!-- Opsi "Semua Fakultas" -->
+                            @foreach($availableYears as $availableYear)
+                                <option value="{{ $availableYear }}" 
+                                    {{ request('filter_year') == $availableYear || (isset($year) && $year == $availableYear) ? 'selected' : '' }}>
+                                    {{ $availableYear }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>                
+
+                <div class="separator my-8"></div>
+                
                 <div class="d-grid gap-2 mb-2">
                     <span class="text-cap fw-bold fs-6">Skema</span>
                     <div class="d-grid gap-2" id="filter_scheme_container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
@@ -117,16 +136,30 @@
                             <label class="form-check-label" for="filter_status_reviewed">Ditinjau</label>
                         </div>
 
-                        <!-- Opsi Accepted -->
-                        <div class="form-check">
-                            <input type="radio" name="filter_status" id="filter_status_accepted" value="accepted" class="form-check-input form-check-input-sm">
-                            <label class="form-check-label" for="filter_status_accepted">Lolos</label>
-                        </div>
-
                         <!-- Opsi Rejected -->
                         <div class="form-check">
                             <input type="radio" name="filter_status" id="filter_status_rejected" value="rejected" class="form-check-input form-check-input-sm">
                             <label class="form-check-label" for="filter_status_rejected">Tidak Lolos</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input type="radio" name="filter_status" id="filter_status_reserve" value="reserve" class="form-check-input form-check-input-sm">
+                            <label class="form-check-label" for="filter_status_reserve">Cadangan</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input type="radio" name="filter_status" id="filter_status_upload" value="upload" class="form-check-input form-check-input-sm">
+                            <label class="form-check-label" for="filter_status_upload">Upload Simbelmawa</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input type="radio" name="filter_status" id="filter_status_funded" value="funded" class="form-check-input form-check-input-sm">
+                            <label class="form-check-label" for="filter_status_funded">Didanai</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input type="radio" name="filter_status" id="filter_status_pimnas" value="pimnas" class="form-check-input form-check-input-sm">
+                            <label class="form-check-label" for="filter_status_pimnas">PIMNAS</label>
                         </div>
 
                         <div class="form-check">
@@ -201,6 +234,12 @@
             $('#filter_faculty').val(selectedFaculty).trigger('change');
         }
 
+        // Atur dropdown tahun
+        const selectedYear = urlParams.get('filter_year');
+        if (selectedYear) {
+            $('#filter_year').val(selectedYear).trigger('change');
+        }
+
         // Atur radio button status
         const selectedStatus = urlParams.get('filter_status');
         if (selectedStatus) {
@@ -237,6 +276,11 @@
                 params.append('filter_faculty', facultyId);
             }
 
+            const year = $('#filter_year').val();
+            if (year) {
+                params.append('filter_year', year);
+            }
+
             const status = $('input[name="filter_status"]:checked').val();
             if (status) {
                 params.append('filter_status', status);
@@ -271,6 +315,11 @@
                 params.set('filter_faculty', facultyId);
             }
 
+            const year = $('#filter_year').val();
+            if (year) {
+                params.set('filter_year', year);
+            }
+
             const status = $('input[name="filter_status"]:checked').val();
             if (status) {
                 params.set('filter_status', status);
@@ -290,6 +339,7 @@
             });
 
             const facultyId = $('#filter_faculty').val();
+            const year = $('#filter_year').val();
             const status = $('input[name="filter_status"]:checked').val();
 
             // Redirect ke route admin.proposal.index dengan parameter filter
@@ -297,6 +347,7 @@
             const params = new URLSearchParams({
                 filter_scheme: schemes.join(','), // Gabungkan skema menjadi string
                 filter_faculty: facultyId,
+                filter_year: year,
                 filter_status: status,
             });
 
@@ -310,5 +361,5 @@
             window.location.href = url;
         });
     });
-</script>
+</script>    
 @endsection

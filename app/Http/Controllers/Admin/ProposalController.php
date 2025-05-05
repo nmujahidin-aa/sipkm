@@ -37,6 +37,7 @@ class ProposalController extends Controller
         $schemes = $request->input('filter_scheme', '');
         $facultyId = $request->input('filter_faculty', 'all');
         $status = $request->input('filter_status', 'all');
+        $year = $request->input('filter_year', 'all');
 
         // Query dasar dengan eager loading
         $query = Proposal::with(['leader', 'faculty', 'advisor', 'proposalReview']);
@@ -52,6 +53,11 @@ class ProposalController extends Controller
             });
         }
 
+        $availableYears = Proposal::select('year')
+                            ->distinct()
+                            ->orderBy('year', 'desc')
+                            ->pluck('year');
+
         // Filter berdasarkan skema
         if (!empty($schemes)) {
             $schemesArray = explode(',', $schemes);
@@ -61,6 +67,11 @@ class ProposalController extends Controller
         // Filter berdasarkan fakultas
         if ($facultyId !== 'all') {
             $query->where('faculty_id', $facultyId);
+        }
+
+        // Filter berdasarkan tahun pengumpulan
+        if ($year !== 'all') {
+            $query->where('year', $year);
         }
 
         // Filter berdasarkan status
@@ -85,7 +96,9 @@ class ProposalController extends Controller
             'advisor' => $advisor,
             'scheme' => $scheme,
             'faculty' => $faculty,
-            'search' => $search
+            'search' => $search,
+            'year' => $year,
+            'availableYears' => $availableYears,
         ];
         if ($request->ajax()) {
             return view($this->view . "table", $data)->render();
@@ -107,12 +120,22 @@ class ProposalController extends Controller
         // Mengambil semua data review proposal berdasarkan id proposal
         $proposalReview = $this->proposalReview::where('proposal_id', $id)->get();
 
+        $status = [
+            'reviewed' => 'Tahap Review',
+            'rejected' => 'Tidak Lolos',
+            'reserve' => 'Cadangan',
+            'upload' => 'Upload Simbelmawa',
+            'funded' => 'Didanai',
+            'pimnas' => 'PIMNAS'
+        ];
+
         return view($this->view."edit",[
             'proposal' => $proposal,
             'advisor' => $advisor,
             'member' => $member,
             'faculty' => $faculty,
-            'proposalReview' => $proposalReview
+            'proposalReview' => $proposalReview,
+            'status' => $status,
         ]);
     }
 

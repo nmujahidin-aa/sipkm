@@ -122,7 +122,19 @@
                                             </div>
                                         </div>
                                         @if (Auth::user()->current_role_id != 4)
-                                        <div class="row mb-1 align-items-center">
+                                        <div class="row mb-4 align-items-center">
+                                            <label class="col-lg-3 col-form-label fw-bolder text-dark">Status</label>
+                                            <div class="col-lg-9">
+                                                <select name="status" class="form-select @error('status') is-invalid @enderror rounded-end-0" data-control="select2" data-placeholder="Pilih Status">
+                                                    <option value="">Pilih Status</option>
+                                                    @foreach ($status as $key => $label)
+                                                        <option value="{{ $key }}" {{ old('status') == $key || (isset($proposal) && $proposal->status == $key) ? 'selected' : '' }}>{{ $label }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="invalid-feedback">@error('status') {{ $message }} @enderror</div>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="row mb-1 align-items-center">
                                             <label class="col-lg-3 col-form-label fw-bolder text-dark">Status</label>
                                             <div class="col-lg-9">
                                                 <div class="form-check form-check-inline">
@@ -138,7 +150,7 @@
                                                     <label class="form-check-label" for="rejected">Tidak Lolos</label>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         @endif
                                     </div>
                                     <!--end::Card body-->

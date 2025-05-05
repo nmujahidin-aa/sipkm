@@ -22,7 +22,7 @@ class ProposalRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'title' => ['required', 'string'],
+            'title' => ['required', 'string', 'unique:proposals,title'],
             'note' => ['nullable'],
             'leader_id' => ['required', 'exists:users,id'],
             'team_name' => ['required', 'string'],
@@ -50,6 +50,7 @@ class ProposalRequest extends FormRequest
     {
         return [
             'title.required' => 'Judul wajib diisi',
+            'title.unique' => 'Judul sudah terdaftar',
             'scheme.required' => 'Skema wajib diisi',
             'leader_id.required' => 'Ketua wajib diisi',
             'team_name.required' => 'Nama tim wajib diisi',

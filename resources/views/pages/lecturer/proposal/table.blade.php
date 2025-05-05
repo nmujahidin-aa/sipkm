@@ -58,7 +58,7 @@
                     @if ($row->status == 'reviewed')
                         <span class="badge badge-primary">Ditinjau</span>
                     @elseif ($row->status == 'rejected')
-                        <span class="badge badge-danger">Tidak Lolos</span>
+                        <span class="badge badge-danger">Tidak Lolos</span>     
                     @elseif ($row->status == 'reserve')
                         <span class="badge badge-warning text-dark">Cadangan</span>
                     @elseif ($row->status == 'upload')
