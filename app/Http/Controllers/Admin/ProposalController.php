@@ -207,14 +207,21 @@ class ProposalController extends Controller
 
     public function export(Request $request)
     {
-        $schemes = $request->input('filter_scheme', '');
-        $facultyId = $request->input('filter_faculty', 'all');
-        $status = $request->input('filter_status', 'all');
+        $cleanedParams = [];
+        foreach ($request->all() as $key => $value) {
+            $cleanedKey = str_replace('amp;', '', $key);
+            $cleanedParams[$cleanedKey] = $value;
+        }
+
+        $year = $cleanedParams['filter_year'] ?? 'all';
+        $facultyId = $cleanedParams['filter_faculty'] ?? 'all';
+        $status = $cleanedParams['filter_status'] ?? 'all';
+        $schemes = $cleanedParams['filter_scheme'] ?? '';
 
         // Query dasar dengan eager loading
         $query = Proposal::with(['leader', 'faculty', 'advisor', 'proposalReview']);
 
-        // Terapkan filter yang sama seperti di index
+        // Filter pencarian
         if (!empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'LIKE', "%{$search}%")
@@ -225,17 +232,25 @@ class ProposalController extends Controller
             });
         }
 
+        // Filter skema
         if (!empty($schemes)) {
             $schemesArray = explode(',', $schemes);
             $query->whereIn('scheme', $schemesArray);
         }
 
+        // Filter fakultas
         if ($facultyId !== 'all') {
             $query->where('faculty_id', $facultyId);
         }
 
+        // Filter status
         if ($status !== 'all') {
             $query->where('status', $status);
+        }
+
+        // Filter tahun - MENGGUNAKAN KOLOM YEAR
+        if ($year !== 'all') {
+            $query->where('year', $year); // Menggunakan kolom year dari tabel proposals
         }
 
         $data = $query->get();
@@ -245,7 +260,7 @@ class ProposalController extends Controller
         $fp = fopen($filename, 'w+');
 
         // Tulis header CSV
-        fputcsv($fp, ['Skema', 'Judul', 'Nama Ketua', 'Link Proposal']);
+        fputcsv($fp, ['Skema', 'Judul', 'Nama Ketua', 'NIM', 'Fakultas', 'Link Proposal', 'Status', 'Tahun']);
 
         // Tulis data proposal ke CSV
         foreach ($data as $proposal) {
@@ -255,19 +270,20 @@ class ProposalController extends Controller
                 $proposal->scheme,
                 $proposal->title,
                 $proposal->leader->name,
-                $file
+                $proposal->leader->nim,
+                $proposal->faculty->short_name,
+                $file,
+                $proposal->status,
+                $proposal->year // Menambahkan tahun ke ekspor
             ]);
         }
 
-        // Tutup file CSV
         fclose($fp);
 
-        // Set header untuk respons download
         $headers = [
             'Content-Type' => 'text/csv',
         ];
 
-        // Kembalikan file CSV sebagai respons download
         return response()->download($filename, 'proposal.csv', $headers)->deleteFileAfterSend(true);
     }
 }
