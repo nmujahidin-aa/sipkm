@@ -270,7 +270,7 @@ class ProposalController extends Controller
                 $proposal->scheme,
                 $proposal->title,
                 $proposal->leader->name,
-                $proposal->leader->nim,
+                "\t" .$proposal->leader->nim,
                 $proposal->faculty->short_name,
                 $file,
                 $proposal->status,
