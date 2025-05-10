@@ -6,6 +6,7 @@
             <th class="w-250px">Ketua Tim</th>
             <th class="min-w-500px">Judul</th>
             <th class="w-150px">Skema</th>
+            <th class="w-150px">Komitmen</th>
             <th class="w-150px">Status</th>
             <th class="w-100px">Aksi</th>
             <th></th>
@@ -53,6 +54,29 @@
                 PKM-{{$row->scheme}}
             </td>
 
+            <td>
+                <div class="mb-3">
+                    @php
+                        $totalFields = $row->members->count() + 1;
+                        $completed = 0;
+                        if($row->commitment) {
+                            $completed += $row->commitment->leader ? 1 : 0;
+                            for($i = 1; $i <= $row->members->count(); $i++) {
+                                $field = "member_$i";
+                                $completed += $row->commitment->$field ? 1 : 0;
+                            }
+                        }
+                        $progress = ($completed / $totalFields) * 100;
+                        $isComplete = $completed === $totalFields;
+                    @endphp
+                    @if($isComplete)
+                        <span class="badge badge-success">{{$completed}}/{{$row->members->count()+1}}</span>
+                    @else
+                        <span class="badge badge-danger"> {{$completed}}/{{$row->members->count()+1}}</span>
+                    @endif
+                </div>
+            </td>
+            
             <td>
                 <div class="mb-3">
                     @if ($row->status == 'reviewed')

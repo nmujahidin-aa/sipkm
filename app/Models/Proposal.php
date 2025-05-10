@@ -59,4 +59,9 @@ class Proposal extends Model
     {
         return $this->hasMany(ProposalReview::class);
     }
+
+    public function commitment()
+    {
+        return $this->hasOne(Commitment::class);
+    }
 }

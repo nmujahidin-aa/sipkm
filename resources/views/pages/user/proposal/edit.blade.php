@@ -65,12 +65,12 @@
                 </div>
             </div>
             @isset($proposal)
-            @if ($proposal->status == "accepted")
-            <div class="alert alert-success fade show mb-5 d-flex align-items-center" role="alert">
-                <i class="bi bi-check-circle fs-1 me-3 alert-heading"></i>
+            @if ($proposal->status == "reviewed")
+            <div class="alert alert-primary fade show mb-5 d-flex align-items-center" role="alert">
+                <i class="bi bi-info-circle fs-1 me-3 alert-heading"></i>
                 <div>
-                    <h4 class="alert-heading mb-1">Selamat !!</h4>
-                    <p class="mb-0">Proposal Anda telah memenuhi kriteria untuk melanjutkan ke tahap selanjutnya. Jangan lupa untuk menghubungi mentor guna mendapatkan pendampingan lebih lanjut.</p>
+                    <h4 class="alert-heading mb-1">Tahap Peninjauan</h4>
+                    <p class="mb-0">Proposal Anda saat ini sedang dalam proses peninjauan. Mohon bersabar dan tetap semangat. Semoga hasilnya yang terbaik untuk Anda!</p>
                 </div>
             </div>
             @elseif ($proposal->status == "rejected")
@@ -81,14 +81,16 @@
                     <p class="mb-0">Mohon maaf, proposal Anda belum memenuhi kriteria untuk melanjutkan ke tahap selanjutnya. Jangan patah semangat, perbaiki proposal Anda dan coba lagi!</p>
                 </div>
             </div>
-            @else
-            <div class="alert alert-primary fade show mb-5 d-flex align-items-center" role="alert">
-                <i class="bi bi-info-circle fs-1 me-3 alert-heading"></i>
+            @elseif (in_array($proposal->status, ['upload', 'funded', 'pimnas']))
+            <div class="alert alert-success fade show mb-5 d-flex align-items-center" role="alert">
+                <i class="bi bi-check-circle fs-1 me-3 alert-heading"></i>
                 <div>
-                    <h4 class="alert-heading mb-1">Tahap Peninjauan</h4>
-                    <p class="mb-0">Proposal Anda saat ini sedang dalam proses peninjauan. Mohon bersabar dan tetap semangat. Semoga hasilnya yang terbaik untuk Anda!</p>
+                    <h4 class="alert-heading mb-1">Selamat !!</h4>
+                    <p class="mb-0">Proposal Anda telah memenuhi kriteria untuk melanjutkan ke tahap selanjutnya. Jangan lupa untuk menghubungi mentor guna mendapatkan pendampingan lebih lanjut.</p>
                 </div>
             </div>
+            @else
+
             @endif
             @endisset
 

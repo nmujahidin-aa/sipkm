@@ -34,6 +34,14 @@ Route::group(['namespace'=>'App\Http\Controllers', 'middleware' => ['auth']], fu
         Route::get('/switch-role/{role}', SwitchRoleController::class)->name('switch-role');
 
         RouteHelper::make('proposal', 'proposal', ProposalController::class);
+        Route::prefix('proposal')->group(function() {
+            Route::post('commitment/{id}', [ProposalController::class, 'commitment'])->name('proposal.commitment'); 
+            Route::prefix('{proposal_id}')->group(function() {
+                Route::post('review', [ProposalController::class, 'storeReview'])->name('proposal.storeReview');  
+                Route::get('review/{id?}', [ProposalController::class, 'review'])->name('proposal.review');
+            });
+        });
+        Route::post('proposal/commitment/{id}', [ProposalController::class, 'commitment'])->name('proposal.commitment');
         Route::post('proposal/{proposal_id}/review', [ProposalController::class, 'storeReview'])->name('proposal.storeReview');
         Route::get('proposal/{proposal_id}/review/{id?}', [ProposalController::class, 'review'])->name('proposal.review');
 

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProposalRequest extends FormRequest
 {
@@ -22,7 +23,11 @@ class ProposalRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'title' => ['required', 'string', 'unique:proposals,title'],
+            'title' => [
+                'required',
+                'string',
+                Rule::unique('proposals', 'title')->ignore($this->id)
+            ],
             'note' => ['nullable'],
             'leader_id' => ['required', 'exists:users,id'],
             'team_name' => ['required', 'string'],

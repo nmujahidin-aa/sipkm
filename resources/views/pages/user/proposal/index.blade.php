@@ -2,6 +2,24 @@
 @section('title', 'Data Proposal | SIPKM UM')
 @section('style')
 <link href="{{URL::to('/')}}/assets/css/custom.css" rel="stylesheet" type="text/css" />
+<style>
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+    }
+    
+    @keyframes pulseShadow {
+        0% { box-shadow: 0 0 5px rgba(220, 53, 69, 0.3); }
+        50% { box-shadow: 0 0 15px rgba(220, 53, 69, 0.5); }
+        100% { box-shadow: 0 0 5px rgba(220, 53, 69, 0.3); }
+    }
+    
+    .clickable-card:hover {
+        transform: translateY(-2px);
+        transition: transform 0.2s ease;
+    }
+</style>
 @endsection
 @section('breadcumb')
 <div class="page-title d-flex flex-column me-5">
@@ -88,89 +106,137 @@
                             </div>
                             <!--end::Head-->
                             <!--begin::Info-->
-                            <div class="d-flex flex-wrap justify-content-start">
+                            <div class="">
                                 <!--begin::Stats-->
-                                <div class="d-flex flex-wrap">
-                                    <!--begin::Stat-->
-                                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                                        <!--begin::Label-->
-                                        <div class="d-flex align-items-center">
-                                            <!--begin:: Avatar -->
-                                            <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-                                                <a href="#">
-                                                    <div class="symbol-label">
-                                                        <img src="{{$row->leader->getPhoto()}}" alt="{{$row->leader->name}}" style="object-fit: cover; object-position: top; width: 100%; height: 100%; display: block;"/>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                            <!--end::Avatar-->
-                                            <!--begin::User details-->
-                                            <div class="d-flex flex-column" style="line-height: 1.2;">
-                                                <a href="#" class="text-gray-800 text-hover-primary fw-bold mb-1" style="margin-bottom: 0.25rem !important;">
-                                                    {{$row->leader->name}}
-                                                </a>
-                                                <small class="text-muted" style="font-size: 12px; margin-bottom: 0.25rem !important;">NIM. {{$row->leader->nim ?: '-'}}</small>
-                                                <div class="d-flex flex-wrap gap-1 mt-1">
-                                                    <span class="badge fw-bolder text-{{$row->leader->faculty->theme()}}"
-                                                          style="background-color: {{$row->leader->faculty->color}}; font-size: 10px; padding: 0.25rem 0.5rem;">
-                                                        {{$row->leader->faculty->name}}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <!--begin::User details-->
-                                        </div>
-                                        <!--end::Label-->
-                                    </div>
-                                    <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                                        @if (isset($advisor[$row->id]) && $advisor[$row->id]->isNotEmpty())
-                                            @php $advisorData = $advisor[$row->id]->first(); @endphp
+                                <div class="">
+                                <div class="row g-3">  <!-- g-3 untuk memberikan gap antara kolom -->
+                                <!-- Kolom 1 - Ketua -->
+                                    <div class="col-xl-3 col-lg-6 col-md-6 col-12 mb-3">
+                                        <div class="border border-gray-300 border-dashed rounded h-100 p-3">  <!-- h-100 dan p-3 untuk padding internal -->
                                             <div class="d-flex align-items-center">
                                                 <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
                                                     <a href="#">
                                                         <div class="symbol-label">
-                                                            <img src="{{ $advisorData->user->getPhoto() }}"
-                                                                 alt="{{ $advisorData->user->name ?? 'Tidak ada advisor' }}"
-                                                                 style="object-fit: cover; object-position: top; width: 100%; height: 100%; display: block;" />
+                                                            <img src="{{$row->leader->getPhoto()}}" alt="{{$row->leader->name}}" style="object-fit: cover; object-position: top; width: 100%; height: 100%; display: block;"/>
                                                         </div>
                                                     </a>
                                                 </div>
-                                                <div class="d-flex flex-column" style="line-height: 1.2;">
-                                                    <a href="#" class="text-gray-800 text-hover-primary fw-bold mb-1"
-                                                       style="margin-bottom: 0.25rem !important;">
-                                                        {{ $advisorData->user->name ?? 'Tidak ada advisor' }}
-                                                    </a>
-                                                    <small class="text-muted" style="font-size: 12px; margin-bottom: 0.25rem !important;">
-                                                        NIP. {{ $advisorData->user->nip ?? '-' }}
-                                                    </small>
+                                                <div class="d-flex flex-column">
+                                                    <a href="#" class="text-gray-800 text-hover-primary fw-bold mb-1">{{$row->leader->name}}</a>
+                                                    <small class="text-muted">NIM. {{$row->leader->nim ?: '-'}}</small>
                                                     <div class="d-flex flex-wrap gap-1 mt-1">
-                                                        <span class="badge fw-bolder text-{{ $advisorData->user->faculty->theme() }}"
-                                                              style="background-color: {{ $advisorData->user->faculty->color }};
-                                                                     font-size: 10px; padding: 0.25rem 0.5rem;">
-                                                            {{ $advisorData->user->faculty->name }}
+                                                        <span class="badge fw-bolder text-{{$row->leader->faculty->theme()}}"
+                                                            style="background-color: {{$row->leader->faculty->color}}; font-size: 10px; padding: 0.25rem 0.5rem;">
+                                                            {{$row->leader->faculty->short_name}}
                                                         </span>
                                                     </div>
                                                 </div>
                                             </div>
-                                        @else
-                                            <small class="text-danger">Dosen Pembimbing belum diatur</small>
-                                        @endif
-                                    </div>
-                                    <div class="min-w-125px py-3 px-4 me-6 mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <div class="fw-bolder">Anggota :</div>
                                         </div>
-                                        <div class="symbol-group symbol-hover mb-3">
-                                            @if ($proposal_member->has($row->id) && $proposal_member[$row->id]->count() > 0)
-                                                @foreach ($proposal_member[$row->id] as $member)
-                                                    <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="{{ $member->user->name }}">
-                                                        <img alt="Pic" src="{{ $member->user->getPhoto() }}" style="object-fit: cover; object-position: top; display: block;" />
+                                    </div>
+
+                                    <!-- Kolom 2 - Dosen Pembimbing -->
+                                    <div class="col-xl-3 col-lg-6 col-md-6 col-12 mb-3">
+                                        <div class="border border-gray-300 border-dashed rounded h-100 p-3">
+                                            @if (isset($advisor[$row->id]) && $advisor[$row->id]->isNotEmpty())
+                                                @php $advisorData = $advisor[$row->id]->first(); @endphp
+                                                <div class="d-flex align-items-center">
+                                                    <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+                                                        <a href="#">
+                                                            <div class="symbol-label">
+                                                                <img src="{{ $advisorData->user->getPhoto() }}"
+                                                                    alt="{{ $advisorData->user->name ?? 'Tidak ada advisor' }}"
+                                                                    style="object-fit: cover; object-position: top; width: 100%; height: 100%; display: block;" />
+                                                            </div>
+                                                        </a>
                                                     </div>
-                                                @endforeach
+                                                    <div class="d-flex flex-column">
+                                                        <div class="text-gray-800 fw-bold mb-1">{{ $advisorData->user->name ?? 'Tidak ada advisor' }}</div>
+                                                        <small class="text-muted">NIP. {{ $advisorData->user->nip ?? '-' }}</small>
+                                                        <div class="d-flex flex-wrap gap-1 mt-1">
+                                                            <span class="badge fw-bolder text-{{ $advisorData->user->faculty->theme() }}"
+                                                                style="background-color: {{ $advisorData->user->faculty->color }};
+                                                                        font-size: 10px; padding: 0.25rem 0.5rem;">
+                                                                {{ $advisorData->user->faculty->short_name }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             @else
-                                                <small class="text-danger">Belum ada anggota</small>
+                                                <div class="text-danger">Dosen Pembimbing belum diatur</div>
                                             @endif
                                         </div>
                                     </div>
+
+                                    <!-- Kolom 3 - Anggota -->
+                                    <div class="col-xl-3 col-lg-6 col-md-6 col-12 mb-3">
+                                        <div class="border border-gray-300 border-dashed rounded h-100 p-3">
+                                            <div class="fw-bolder mb-2">Anggota :</div>
+                                            <div class="symbol-group symbol-hover mb-3">
+                                                @if ($proposal_member->has($row->id) && $proposal_member[$row->id]->count() > 0)
+                                                    @foreach ($proposal_member[$row->id] as $member)
+                                                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="{{ $member->user->name }}">
+                                                            <img alt="Pic" src="{{ $member->user->getPhoto() }}" style="object-fit: cover; object-position: top; display: block;" />
+                                                        </div>
+                                                    @endforeach
+                                                @else
+                                                    <small class="text-danger">Belum ada anggota</small>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @if (in_array($row->status, ['reserve', 'upload', 'funded', 'pimnas']))
+                                        @php
+                                            $totalFields = $row->members->count() + 1;
+                                            $completed = 0;
+                                            if($row->commitment) {
+                                                $completed += $row->commitment->leader ? 1 : 0;
+                                                for($i = 1; $i <= $row->members->count(); $i++) {
+                                                    $field = "member_$i";
+                                                    $completed += $row->commitment->$field ? 1 : 0;
+                                                }
+                                            }
+                                            $progress = ($completed / $totalFields) * 100;
+                                            $isComplete = $completed === $totalFields;
+                                        @endphp
+
+                                        <div class="col-xl-3 col-lg-6 col-md-6 col-12 mb-3">
+                                            <div class="border border-gray-300 border-dashed rounded h-100 p-3 position-relative clickable-card"
+                                                style="cursor: pointer; @if(!$isComplete) animation: pulseShadow 2s infinite; @endif"
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#commitmentModal-{{ $row->id }}">
+                                                
+                                                <!-- Konten utama -->
+                                                <div class="text-center py-2">
+                                                    <i class="bi bi-file-earmark-check fs-1 @if($isComplete) text-success @else text-danger @endif"></i>
+                                                    <div class="mt-2 @if($isComplete) text-success @else text-danger @endif fw-bold">
+                                                        @if($isComplete) Dokumen Lengkap @else Unggah Komitmen @endif
+                                                    </div>
+                                                    
+                                                    <!-- Indikator progres -->
+                                                    <div class="progress mt-3" style="height: 10px;">
+                                                        <div class="progress-bar @if($isComplete) bg-success @else bg-danger @endif" 
+                                                            role="progressbar" 
+                                                            style="width: {{ $progress }}%;" 
+                                                            aria-valuenow="{{ $progress }}" 
+                                                            aria-valuemin="0" 
+                                                            aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                    <small class="text-muted">{{ $completed }}/{{ $totalFields }} dokumen lengkap</small>
+                                                </div>
+                                                
+                                                <!-- Overlay untuk highlight -->
+                                                @if(!$isComplete)
+                                                    <div class="position-absolute top-0 start-0 w-100 h-100" 
+                                                        style="pointer-events: none; border-radius: inherit; box-shadow: 0 0 0 rgba(220, 53, 69, 0.7); animation: pulse 2s infinite;">
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
                                 </div>
                                 <!--end::Users-->
                             </div>
@@ -182,8 +248,14 @@
                     <div class="mb-3">
                         @if ($row->status == 'reviewed')
                             <span class="badge badge-primary">Status: Tahap Seleksi</span>
-                        @elseif ($row->status == 'accepted')
-                            <span class="badge badge-success">Status: Lolos Tahap Selanjutnya</span>
+                        @elseif ($row->status == 'reserve')
+                            <span class="badge badge-warning text-dark">Status: Cadangan</span>
+                        @elseif ($row->status == 'upload')
+                            <span class="badge badge-success">Status: Uploas Simbelmawa</span>
+                        @elseif ($row->status == 'funded')
+                            <span class="badge badge-success">Status: Didanai</span>
+                        @elseif ($row->status == 'pimnas')
+                            <span class="badge badge-success">Status: PIMNAS</span>
                         @elseif ($row->status == 'rejected')
                             <span class="badge badge-danger">Status: Tidak Lolos</span>
                         @endif
@@ -194,9 +266,9 @@
                 <div class="card-footer border-0">
                     <!--begin::Actions-->
                     <div class="d-flex mb-4 justify-content-end">
-                        <a href="{{ route('proposal.edit', $row->id) }}" class="btn btn-sm btn-warning me-3 text-dark position-relative">
+                        <a href="{{ route('proposal.edit', $row->id) }}" class="btn btn-sm btn-warning me-5 text-dark position-relative">
                             <i class="bi bi-pencil text-dark"></i> Log Catatan
-                            <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill @if (isset($proposalReview[$row->id]) && $proposalReview[$row->id]->count() > 0) bg-danger @else bg-success @endif">
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill @if (isset($proposalReview[$row->id]) && $proposalReview[$row->id]->count() > 0) bg-danger @else bg-success @endif">
                                 {{isset($proposalReview[$row->id]) ? $proposalReview[$row->id]->count() : 0}}
                             </span>
                         </a>
@@ -211,6 +283,69 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="commitmentModal-{{ $row->id }}" tabindex="-1" aria-labelledby="commitmentModalLabel-{{ $row->id }}" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title text-light" id="commitmentModalLabel">Unggah Dokumen Komitmen</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="commitmentForm-{{ $row->id }}" action="{{ route('proposal.commitment', $row->id) }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="modal-body">
+                                <!-- Ketua -->
+                                <div class="mb-4 p-3 border rounded">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="mb-0 fw-bold">1. Surat Pernyataan Ketua</h6>
+                                        <span id="leaderStatus" class="badge {{ $row->commitment && $row->commitment->leader ? 'bg-success' : 'bg-secondary' }}">
+                                            {{ $row->commitment && $row->commitment->leader ? '✓ Terunggah' : 'Belum diunggah' }}
+                                        </span>
+                                    </div>
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" name="leader" id="leaderFile" accept=".pdf">
+                                        @if($row->commitment && $row->commitment->leader)
+                                            <a href="{{ Storage::url($row->commitment->leader) }}" target="_blank" class="btn btn-outline-success">
+                                                <i class="bi bi-download"></i> Download
+                                            </a>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <!-- Anggota 1-4 -->
+                                @for($i = 1; $i <= $row->members->count(); $i++)
+                                    @php 
+                                        $memberField = "member_$i";
+                                        $memberFile = $row->commitment ? $row->commitment->$memberField : null;
+                                    @endphp
+                                    <div class="mb-4 p-3 border rounded">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h6 class="mb-0 fw-bold">{{ $i+1 }}. Form Komitmen Anggota {{ $i }}</h6>
+                                            <span id="{{ $memberField }}Status" class="badge {{ $memberFile ? 'bg-success' : 'bg-secondary' }}">
+                                                {{ $memberFile ? '✓ Terunggah' : 'Belum diunggah' }}
+                                            </span>
+                                        </div>
+                                        <div class="input-group">
+                                            <input type="file" class="form-control" name="{{ $memberField }}" id="{{ $memberField }}File" accept=".pdf">
+                                            @if($memberFile)
+                                                <a href="{{ Storage::url($memberFile) }}" target="_blank" class="btn btn-outline-success">
+                                                    <i class="bi bi-download"></i> Download
+                                                </a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endfor
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                <button type="submit" class="btn btn-danger">Simpan Perubahan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             @endforeach
             @endif
             {{$proposal->links()}}
@@ -219,6 +354,8 @@
     </div>
     <!--end::Post-->
 </div>
+<!-- Modal -->
+
 <form id="frmDelete" method="POST">
     @csrf
     @method('DELETE')
