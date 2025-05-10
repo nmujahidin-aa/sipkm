@@ -175,6 +175,7 @@
                                     </div>
                                     <!--end::Card title-->
                                 </div>
+
                                 <!--end::Card header-->
                                 <!--begin::Card body-->
                                 <div class="card-body">
@@ -313,6 +314,70 @@
                                             </div>
                                         </label>
                                     </div>
+
+                                
+                                    @if(in_array($proposal->status, ['upload', 'reserve', 'funded', 'pimnas']))
+                                        <div class="row flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visible">
+                                            @php
+                                                $filePath = $proposal->commitment->leader ?? null;
+                                                $fileUrl = $filePath ? asset('storage/'.$filePath) : null;
+                                            @endphp
+                                            <div class="col-xl col-12 mb-3">
+                                            <div class="border border-gray-300 border-dashed rounded min-w-200px h-100 p-3 position-relative {{ $fileUrl ? 'clickable-card' : '' }}"
+                                                style="cursor: {{ $fileUrl ? 'pointer' : 'default' }};"
+                                                @if($fileUrl) onclick="window.open('{{ $fileUrl }}', '_blank')" @endif>
+                                                
+                                                <!-- Konten utama -->
+                                                <div class="text-center py-2">
+                                                    <i class="bi bi-person-badge fs-1 {{ $filePath ? 'text-success' : 'text-danger' }}"></i>
+                                                    <div class="mt-2 {{ $filePath ? 'text-success' : 'text-danger' }} fw-bold">
+                                                        Ketua Tim
+                                                    </div>
+                                                    <small class="text-muted">{{ $filePath ? 'Sudah Upload' : 'Belum Upload' }}</small>
+                                                </div>
+                                                
+                                                <!-- Indicator untuk file yang bisa diklik -->
+                                                @if($filePath)
+                                                    <div class="position-absolute bottom-0 end-0 p-2">
+                                                        <i class="bi bi-box-arrow-up-right text-primary"></i>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    
+                                        @foreach($proposal->members as $index => $member)
+                                            @php
+                                                $memberIndex = $index + 1;
+                                                $filePath = $proposal->commitment->{'member_'.$memberIndex} ?? null;
+                                                $fileUrl = $filePath ? asset('storage/'.$filePath) : null;
+                                            @endphp
+                                            <div class="col-xl col-12 mb-3">
+                                                <div class="border border-gray-300 border-dashed rounded min-w-200px h-100 p-3 position-relative {{ $fileUrl ? 'clickable-card' : '' }}"
+                                                    style="cursor: {{ $fileUrl ? 'pointer' : 'default' }};"
+                                                    @if($fileUrl) onclick="window.open('{{ $fileUrl }}', '_blank')" @endif>
+                                                    
+                                                    <!-- Konten utama -->
+                                                    <div class="text-center py-2">
+                                                        <i class="bi bi-people fs-1 {{ $filePath ? 'text-success' : 'text-danger' }}"></i>
+                                                        <div class="mt-2 {{ $filePath ? 'text-success' : 'text-danger' }} fw-bold">
+                                                            Anggota {{ $memberIndex }}
+                                                        </div>
+                                                        <small class="text-muted">{{ $filePath ? 'Sudah Upload' : 'Belum Upload' }}</small>
+                                                    </div>
+                                                    
+                                                    <!-- Indicator untuk file yang bisa diklik -->
+                                                    @if($filePath)
+                                                        <div class="position-absolute bottom-0 end-0 p-2">
+                                                            <i class="bi bi-box-arrow-up-right text-primary"></i>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                        </div>
+                                    @endif
+                                
+                                    
                                 </div>
                                 <!--end::Card body-->
                                 <!--begin::Card footer-->

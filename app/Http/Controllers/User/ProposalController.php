@@ -17,6 +17,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\Setting;
 use App\Models\Commitment;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 
 class ProposalController extends Controller
@@ -205,9 +206,10 @@ class ProposalController extends Controller
         }
     }
 
-    public function commitment(Request $request, string $id){
+    public function commitment(Request $request, string $id)
+    {
         $proposal = Proposal::findOrFail($id);
-    
+        
         // Cek apakah sudah ada commitments atau buat baru
         $commitments = $proposal->commitment ?? $this->commitment;  
         $commitments->proposal_id = $proposal->id;
@@ -222,27 +224,29 @@ class ProposalController extends Controller
         ];
         
         foreach ($fields as $field => $type) {
-        if ($request->hasFile($field)) {
-            // Hapus file lama jika ada
-            if ($commitments->$field) {
-                Storage::delete($commitments->$field);
+            if ($request->hasFile($field)) {
+                // Hapus file lama jika ada
+                if ($commitments->$field) {
+                    Storage::disk('public')->delete($commitments->$field);
+                }
+                
+                // Generate nama file dengan 10 karakter random
+                $randomString = Str::random(10);
+                $extension = $request->file($field)->getClientOriginalExtension();
+                $filename = "commitment_{$proposal->id}_{$type}_{$randomString}.{$extension}";
+                
+                // Simpan file baru di storage/public/commitment
+                $path = $request->file($field)->storeAs(
+                    "commitment", 
+                    $filename,
+                    'public'
+                );
+                
+                $commitments->$field = $path;
             }
-            
-            // Generate nama file
-            $extension = $request->file($field)->getClientOriginalExtension();
-            $filename = "commitment_{$proposal->id}_{$type}.{$extension}";
-            
-            // Simpan file baru
-            $path = $request->file($field)->storeAs(
-                "commitment", 
-                $filename
-            );
-            
-            $commitments->$field = $path;
         }
-    }
-    
-    $commitments->save();
+        
+        $commitments->save();
         
         alert()->html('Berhasil', 'Dokumen komitmen berhasil disimpan!', 'success');
         return redirect()->back();
