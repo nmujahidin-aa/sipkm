@@ -298,7 +298,7 @@
                                 <!-- Ketua -->
                                 <div class="mb-4 p-3 border rounded">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <h6 class="mb-0 fw-bold">1. Surat Pernyataan Ketua</h6>
+                                        <h6 class="mb-0 fw-bold">1. Form Komitmen Ketua</h6>
                                         <span id="leaderStatus" class="badge {{ $row->commitment && $row->commitment->leader ? 'bg-success' : 'bg-secondary' }}">
                                             {{ $row->commitment && $row->commitment->leader ? '✓ Terunggah' : 'Belum diunggah' }}
                                         </span>
