@@ -38,6 +38,7 @@ Route::group(["middleware"=>"auth"], function(){
 
     RouteHelper::make('proposal', 'proposal', ProposalController::class);
     Route::post('proposal/review/upload', [ProposalController::class, 'upload'])->name('proposal.reviewUpload');
+    Route::post('proposal/{proposal}/update-leader', [ProposalController::class, 'updateLeader'])->name('proposal.update-leader');
     Route::post('proposal/{proposal_id}/review', [ProposalController::class, 'storeReview'])->name('proposal.storeReview');
     Route::get('proposal/{proposal_id}/review/{id?}', [ProposalController::class, 'review'])->name('proposal.review');
     Route::get('proposal/export', [ProposalController::class, 'export'])->name('proposal.export');

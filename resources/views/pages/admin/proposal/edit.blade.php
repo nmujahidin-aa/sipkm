@@ -183,36 +183,47 @@
                                         <label class="form-check-label col-lg-6 col-sm-12">
                                             <div class="fw-bolder mb-3">Ketua Tim</div>
                                             <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
-                                                <div class="d-flex align-items-center">
-                                                    <!--begin:: Avatar -->
-                                                    <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-                                                        <a href="#">
-                                                            <div class="symbol-label">
-                                                                <img src="{{$proposal->leader->getPhoto()}}" alt="{{$proposal->leader->name}}" style="object-fit: cover; object-position: top; width: 100%; height: 100%; display: block;"/>
+                                                <div class="d-flex align-items-center justify-content-between">
+                                                    <!-- Bagian kiri (user info) -->
+                                                    <div class="d-flex align-items-center">
+                                                        <!--begin:: Avatar -->
+                                                        <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+                                                            <a href="#">
+                                                                <div class="symbol-label">
+                                                                    <img src="{{$proposal->leader->getPhoto()}}" alt="{{$proposal->leader->name}}" style="object-fit: cover; object-position: top; width: 100%; height: 100%; display: block;"/>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                        <!--end::Avatar-->
+                                                        <!--begin::User details-->
+                                                        <div class="d-flex flex-column" style="line-height: 1.2;">
+                                                            <div class="text-gray-800 fw-bold mb-1" style="margin-bottom: 0.25rem !important;">
+                                                                {{$proposal->leader->name}}
                                                             </div>
-                                                        </a>
-                                                    </div>
-                                                    <!--end::Avatar-->
-                                                    <!--begin::User details-->
-                                                    <div class="d-flex flex-column" style="line-height: 1.2;">
-                                                        <div class="text-gray-800 fw-bold mb-1" style="margin-bottom: 0.25rem !important;">
-                                                            {{$proposal->leader->name}}
+                                                            <small class="text-muted" style="font-size: 12px; margin-bottom: 0.25rem !important;">NIM. {{$proposal->leader->nim ?: '-'}}</small>
+                                                            <div class="d-flex flex-wrap gap-1 mt-1">
+                                                                <span class="badge fw-bolder text-{{$proposal->leader->faculty->theme()}}"
+                                                                    style="background-color: {{$proposal->leader->faculty->color}}; font-size: 10px; padding: 0.25rem 0.5rem;">
+                                                                    {{$proposal->leader->faculty->short_name}}
+                                                                </span> |
+                                                                <span class="badge fw-bolder text-{{$proposal->leader->faculty->theme()}}"
+                                                                    style="background-color: {{$proposal->leader->faculty->color}}; font-size: 10px; padding: 0.25rem 0.5rem;">
+                                                                    {{$proposal->leader->studyProgram->name}}
+                                                                </span>
+                                                            </div>
                                                         </div>
-                                                        <small class="text-muted" style="font-size: 12px; margin-bottom: 0.25rem !important;">NIM. {{$proposal->leader->nim ?: '-'}}</small>
-                                                        <div class="d-flex flex-wrap gap-1 mt-1">
-                                                            <span class="badge fw-bolder text-{{$proposal->leader->faculty->theme()}}"
-                                                                style="background-color: {{$proposal->leader->faculty->color}}; font-size: 10px; padding: 0.25rem 0.5rem;">
-                                                                {{$proposal->leader->faculty->short_name}}
-                                                            </span> |
-                                                            <span class="badge fw-bolder text-{{$proposal->leader->faculty->theme()}}"
-                                                                style="background-color: {{$proposal->leader->faculty->color}}; font-size: 10px; padding: 0.25rem 0.5rem;">
-                                                                {{$proposal->leader->studyProgram->name}}
-                                                            </span>
-                                                        </div>
+                                                        <!--begin::User details-->
                                                     </div>
-                                                    <!--begin::User details-->
+                                                    
+                                                    @if (Auth::user()->current_role_id == 1)
+                                                    <button type="button" class="btn btn-icon btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#userModal">
+                                                        <i class="fas fa-exchange-alt"></i>
+                                                    </button>
+                                                    @include('pages.admin.proposal.modal')
+                                                    @endif
                                                 </div>
                                             </div>
+                                            
                                         </label>
                                         <label class="form-check-label col-lg-6 col-sm-12">
                                             <div class="fw-bolder mb-3">Dosen Pendamping</div>
@@ -530,4 +541,5 @@
 <script src="{{URL::to('/')}}/assets/plugins/custom/datatables/datatables.bundle.js"></script>
 <!--begin::Page Custom Javascript(used by this page)-->
 <script src="{{URL::to('/')}}/assets/js/custom/apps/user-management/users/list/table.js"></script>
+
 @endsection

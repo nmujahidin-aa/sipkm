@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 use App\Models\Proposal;
 use App\Models\Member;
 use App\Models\Faculty;
+use App\Models\User;
 use App\Models\ProposalReview;
 use App\Http\Requests\Admin\ProposalRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Env;
+use Illuminate\Support\Facades\DB;
 
 class ProposalController extends Controller
 {
@@ -21,6 +23,7 @@ class ProposalController extends Controller
     private $member;
     private $faculty;
     private $proposalReview;
+    private $user;
 
     public function __construct(){
         $this->view = "pages.admin.proposal.";
@@ -28,6 +31,7 @@ class ProposalController extends Controller
         $this->route = "admin.proposal.";
         $this->member = new Member();
         $this->faculty = new Faculty();
+        $this->user = new User();
         $this->proposalReview = new ProposalReview();
     }
 
@@ -285,5 +289,67 @@ class ProposalController extends Controller
         ];
 
         return response()->download($filename, 'proposal.csv', $headers)->deleteFileAfterSend(true);
+    }
+
+    public function updateLeader(Request $request, $proposal_id)
+    {
+        $request->validate([
+            'new_leader_id' => 'required|exists:users,id'
+        ]);
+
+        try {
+            DB::transaction(function () use ($request, $proposal_id) {
+                // 1. Dapatkan data proposal
+                $proposal = $this->proposal::findOrFail($proposal_id);
+                $oldLeaderId = $proposal->leader_id;
+                $newLeaderId = $request->new_leader_id;
+
+                // 2. Update proposal (leader_id dan faculty_id)
+                $newLeader = $this->user::findOrFail($newLeaderId);
+                $proposal->update([
+                    'leader_id' => $newLeaderId,
+                    'faculty_id' => $newLeader->faculty_id
+                ]);
+
+                // 3. Update role_in_team untuk leader lama
+                $this->member::where('proposal_id', $proposal_id)
+                    ->where('user_id', $oldLeaderId)
+                    ->update(['role_in_team' => 'member']);
+
+                // 4. Update role_in_team untuk leader baru
+                $this->member::where('proposal_id', $proposal_id)
+                    ->where('user_id', $newLeaderId)
+                    ->update(['role_in_team' => 'leader']);
+
+                // 5. Jika leader baru belum ada di anggota, tambahkan
+                $existingMember = $this->member::where('proposal_id', $proposal_id)
+                    ->where('user_id', $newLeaderId)
+                    ->exists();
+
+                if (!$existingMember) {
+                    $this->member::create([
+                        'proposal_id' => $proposal_id,
+                        'user_id' => $newLeaderId,
+                        'role_in_team' => 'leader'
+                    ]);
+                }
+            });
+
+            // return response()->json([
+            //     'success' => true,
+            //     'message' => 'Ketua Tim berhasil diubah',
+            //     'redirect' => route($this->route . 'edit', ['id' => $proposal_id])
+            // ]);
+            alert()->html('Berhasil', 'Ketua Tim berhasil diubah', 'success');
+            return redirect()->route($this->route . 'edit', ['id' => $proposal_id]);
+
+        } catch (\Exception $e) {
+            // return response()->json([
+            //     'success' => false,
+            //     'message' => 'Gagal mengubah ketua tim: ' . $e->getMessage()
+            // ], 500);
+            alert()->html('Gagal', 'Gagal mengubah ketua tim', 'error');
+            return redirect()->route($this->route . 'edit', ['id' => $proposal_id]);
+        }
     }
 }
