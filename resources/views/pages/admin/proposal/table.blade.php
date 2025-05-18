@@ -23,9 +23,9 @@
             <td class="d-flex align-items-center">
                 <!--begin::User details-->
                 <div class="d-flex flex-column" style="line-height: 1.2;">
-                    <a href="#" class="text-gray-800 text-hover-primary fw-bold mb-1" style="margin-bottom: 0.25rem !important;">
+                    <div class="text-gray-800  fw-bold mb-1" style="margin-bottom: 0.25rem !important;">
                         {{$row->leader->name ?: '-'}}
-                    </a>
+                    </div>
                     <small class="text-muted" style="font-size: 12px; margin-bottom: 0.25rem !important;">NIM. {{$row->leader->nim ?: '-'}}</small>
                     <div class="d-flex flex-wrap gap-1 mt-1">
                         <span class="badge fw-bolder text-{{ $row->leader->faculty ? $row->leader->faculty->theme() : 'dark' }}"
@@ -42,7 +42,7 @@
                     <small>Pendamping:
                         @if (isset($advisor[$row->id]) && $advisor[$row->id]->isNotEmpty())
                             @php $advisorData = $advisor[$row->id]->first(); @endphp
-                            {{ $advisorData->user->name ?? 'Tidak ada advisor' }} - {{ $advisorData->user->nidn ?? ' NIDN belum diatur ' }}
+                            {{ $advisorData->user->name ?? 'Tidak ada advisor' }} - {{ $advisorData->user->nuptk ?? ' NUPTK belum diatur ' }}
                         @else
                             <small class="text-danger">Belum diatur</small>
                         @endif

@@ -251,7 +251,7 @@
                         @elseif ($row->status == 'reserve')
                             <span class="badge badge-warning text-dark">Status: Cadangan</span>
                         @elseif ($row->status == 'upload')
-                            <span class="badge badge-success">Status: Uploas Simbelmawa</span>
+                            <span class="badge badge-success">Status: Upload Simbelmawa</span>
                         @elseif ($row->status == 'funded')
                             <span class="badge badge-success">Status: Didanai</span>
                         @elseif ($row->status == 'pimnas')
@@ -274,11 +274,13 @@
                         </a>
                         <a href="{{route('proposal.edit', $row->id)}}" class="btn btn-sm btn-primary me-3"><i class="bi bi-pencil"></i> Ubah</a>
                         <!--begin::Menu-->
+                        @if($row->status == 'reviewed')
                         <div class="me-0">
                             <button class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary btn-delete" data-id="{{$row->id}}">
                                 <i class="bi bi-trash fs-3"></i>
                             </button>
                         </div>
+                        @endif
                         <!--end::Menu-->
                     </div>
                 </div>

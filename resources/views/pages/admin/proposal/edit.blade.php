@@ -201,6 +201,8 @@
                                                                 {{$proposal->leader->name}}
                                                             </div>
                                                             <small class="text-muted" style="font-size: 12px; margin-bottom: 0.25rem !important;">NIM. {{$proposal->leader->nim ?: '-'}}</small>
+                                                            <small class="text-muted" style="font-size: 12px; margin-bottom: 0.25rem !important;">Email. {{$proposal->leader->email ?: '-'}}</small>
+                                                            <small class="text-muted" style="font-size: 12px; margin-bottom: 0.25rem !important;">No HP. {{$proposal->leader->phone ?: '-'}}</small>
                                                             <div class="d-flex flex-wrap gap-1 mt-1">
                                                                 <span class="badge fw-bolder text-{{$proposal->leader->faculty->theme()}}"
                                                                     style="background-color: {{$proposal->leader->faculty->color}}; font-size: 10px; padding: 0.25rem 0.5rem;">
@@ -244,12 +246,12 @@
                                                             {{$proposal->advisor->user->name}}
                                                         </div>
                                                         <small class="text-muted" style="font-size: 12px; margin-bottom: 0.25rem !important;">
-                                                            @if ($proposal->advisor->user->nidn)
-                                                                NIDN. {{ $proposal->advisor->user->nidn }}
-                                                            @elseif ($proposal->advisor->user->nuptk)
+                                                            @if ($proposal->advisor->user->nuptk)
                                                                 NUPTK. {{ $proposal->advisor->user->nuptk }}
+                                                            @elseif ($proposal->advisor->user->nidn)
+                                                                NIDN. {{ $proposal->advisor->user->nidn }}
                                                             @else
-                                                                <small class="text-danger">NIDN/NUPTK belum diatur</small>
+                                                                <small class="text-danger">NUPTK/NIDN belum diatur</small>
                                                             @endif
                                                         </small>
                                                         <div class="d-flex flex-wrap gap-1 mt-1">
@@ -315,6 +317,7 @@
                                         @endforeach
                                     </div>
 
+                                    <!-- Start: Catatan -->
                                     <div class="d-flex flex-wrap align-items-start row">
                                         <label class="form-check-label col-12">
                                             <div class="fw-bolder mb-3">Catatan</div>
@@ -325,8 +328,9 @@
                                             </div>
                                         </label>
                                     </div>
+                                    <!-- End: Catatan -->
 
-                                
+                                    <!-- Surat Komitmen -->
                                     @if(in_array($proposal->status, ['upload', 'reserve', 'funded', 'pimnas']))
                                         <div class="row flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visible">
                                             @php
@@ -387,6 +391,7 @@
                                         @endforeach
                                         </div>
                                     @endif
+                                    <!-- End of Surat Komitmen -->
                                 
                                     
                                 </div>
@@ -448,7 +453,7 @@
                                             <!--begin::Table row-->
                                             <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
                                                 <th class="min-w-250px">Judul Catatan</th>
-                                                <th class="w-150px">File</th>
+                                                <th class="w-150px">File</th>  
                                                 <th class="min-w-250px">Tanggapan</th>
                                                 <th class="w-250px">Reviewer</th>
                                                 <th class="w-150px">Status</th>

@@ -35,14 +35,14 @@
                         {{$row->name}}
                     </a>
                     <small class="text-muted" style="font-size: 12px; margin-bottom: 0.25rem !important;">
-                        @if($row->nidn)
-                            NIDN. {{$row->nidn}}
+                        @if($row->nuptk)
+                            NUPTK. {{$row->nuptk}}
                         @elseif($row->nip)
                             NIP. {{$row->nip}}
-                        @elseif ($row->nuptk)
-                            NUPTK. {{$row->nuptk}}
+                        @elseif ($row->nidn)
+                            NIDN. {{$row->nidn}}
                         @else
-                            <span class="text-danger">NIDN/NIP/NUPTK belum diatur</span>
+                            <span class="text-danger">NUPTK/NIDN/NIP belum diatur</span>
                         @endif
                     </small>
                     <div class="d-flex flex-wrap gap-1 mt-1">
